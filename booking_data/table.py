@@ -11,7 +11,7 @@ pd.set_option('display.width', 1000)
 
 with open('bokking.json') as data_file:    
     data = json.load(data_file)
-use_data = data[17] # 0 17 38
+use_data = data[33] # 0 17 38
 
 
 fare_id = use_data['cid']

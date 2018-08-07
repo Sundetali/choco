@@ -64,6 +64,7 @@
   if($result_select_3->num_rows > 0) {
     $i = 0;
     while($row = $result_select_3->fetch_assoc()) {
+      $rule[$i]['fare'] = $row['fare'];
       $rule[$i]['rule_text'] = $row['rule_text'];
       $i++;
     }
