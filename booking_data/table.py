@@ -11,7 +11,7 @@ pd.set_option('display.width', 1000)
 
 with open('bokking.json') as data_file:    
     data = json.load(data_file)
-use_data = data[38]
+use_data = data[17] # 0 17 38
 
 
 fare_id = use_data['cid']
@@ -22,7 +22,7 @@ user_info = load['passes']
 
 
 
-user_dict = {'id': [],'name': [],'surname': [],'total_price': [],'ticket_id': [], 'sum_tax': []}
+user_dict = {'id': [],'name': [],'surname': [],'total_price': [],'ticket_id': [], 'sum_tax': [], 'without_tax': [], 'sum_penalty': [], 'refund': []}
 tax_dict = {'user_id': [], 'price': [],'tax_nature': [],'country_code': [], 'Refund': []}
 dep_dict = {'user_id': [], 'status': [], 'dep_time': [], 'arr_time': [], 'from_loc': [], 'to_loc': [],'fare_basis': []}
 last = {'name': [],'surname': [],'from_loc': [],'total_price': [],'tax': [],'penalty': [],'to_return': [],'fare_basis':[]}
@@ -39,7 +39,10 @@ def getUser(data):
         user_dict['surname'].append(i['Surname'])
         user_dict['total_price'].append(int(i['TotalFare']))
         user_dict['ticket_id'].append(i['eTicketNumber'])
-        user_dict['sum_tax'].append(0);
+        user_dict['sum_tax'].append(0)
+        user_dict['without_tax'].append(int(i['TotalFare']))
+        user_dict['sum_penalty'].append(0)
+        user_dict['refund'].append(int(i['TotalFare']))
 
 
         arr.append("")

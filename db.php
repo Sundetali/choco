@@ -19,6 +19,9 @@
       $data[$i]['loc'] = $row['loc'];
       $data[$i]['fare_basis'] = $row['fare_basis'];
       $data[$i]['sum_tax'] = $row['sum_tax'];
+      $data[$i]['without_tax'] = $row['without_tax'];
+      $data[$i]['sum_penalty'] = $row['sum_penalty'];
+      $data[$i]['refund'] = $row['refund'];
       
       $i++;
     }

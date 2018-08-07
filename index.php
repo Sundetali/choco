@@ -27,7 +27,6 @@
 			margin-bottom: 1rem;
 		}
 		#tax-table .ref-non-input {
-			display: none;
 		}
 		.id:first-child,
 		.id:name-surname,
@@ -64,12 +63,14 @@
 		}
 		.farerule p {
 			height: 300px;
+			max-width: 250px;
 			overflow-y: scroll;
+
 		}
 	</style>
 </head>
 <body>
-	<div class="tax-container">
+	<div class="user-info">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-9">
@@ -80,11 +81,14 @@
 								<th>ID</th>
 								<th>Name Surname</th>
 								<th>tiket-id</th>
-								<th>Total price</th>
 								<th>Status</th>
 								<th>Segment</th>
 								<th>Fare-basis</th>
+								<th>Total price</th>
 								<th>Sum Tax</th>
+								<th>Without tax</th>
+								<th>Sum penalty</th>
+								<th>refund</th>
 								
 							</tr>
 							<?php foreach($data as $value):?>
@@ -92,13 +96,43 @@
 								<td class="id"><?php echo $value['id']?></td>
 								<td class="name-surname"><?php echo $value['name_surname']?></td>
 								<td class="ticket-id"><?=$value['ticket_id']?></td>
-								<td class="ticket-price dif"><?=$value['total_price']?></td>
 								<td class="status"><?=$value['status']?></td>
 								<td class="segment"><?=$value['loc']?></td>
 								<td class="fare-basis"><?=$value['fare_basis']?></td>
-								<td class="sum_tax"><?=$value['sum_tax']?></td>
+								<td class="ticket-price"><?=$value['total_price']?></td>
+								<td class="sum_tax pen"><?=$value['sum_tax']?></td>
+								<td class="without_tax dif"><?=$value['without_tax']?></td>
+								<td class="sum_penalty pen"><?=$value['sum_penalty']?></td>
+								<td class="refund dif"><?=$value['refund']?></td>
 							</tr>
 							<?php endforeach; ?>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td class="total-price-ticket tax-number"></td>
+								<td class="total-penalty-tax pen"></td>
+								<td class="total-price-ticket-1 dif"></td>
+								<td class="total-penalty-farerule pen"></td>
+								<td class="result dif"></td>
+								
+							</tr>
 						</table>		
 					</form>
 				</div>
@@ -123,7 +157,13 @@
 					</table>
 					<button class="btn btn-success btn-ref-non">Add</button>
 				</div>
-				<div class="col-md-12">
+			</div>
+		</div>
+	</div>
+	<div class="tax-list">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9">
 					<h1>Tax</h1>
 					<form id="tax-form">
 						<table class="table table-bordered" id="tax-table">
@@ -146,134 +186,108 @@
 							</tr>
 							<?php endforeach;?>
 						</table>
-						<input type="submit" class="btn btn-secondary btn-count" value="Count">
+						<!-- <input type="submit" class="btn btn-secondary btn-count" value="Count"> -->
 					</form>
-					<div class="d-flex justify-content-between">
+					<!-- <div class="d-flex justify-content-between">
 							<div class="tax-result">
-								<p class="price-ticket-wrapper">
+								<p class="total-price-ticket-wrapper">
 									<span>Ticket sum:</span>
-									<span class="price-ticket tax-number"></span>	
+									<span class="total-price-ticket tax-number"></span>	
 								</p>
-								<!-- <p class="tax-non-wrapper">
+								<p class="tax-non-wrapper">
 									<span>Sum Difference(non-ref):</span>
 									<span class="sum-non-ref tax-number"></span>	
-								</p> -->
+								</p>
 								<p class="">
 									<span>Sum tax:</span>
-									<span class="sum-penalty-tax pen tax-number">0</span>	
+									<span class="total-penalty-tax pen tax-number">0</span>	
 								</p>
-								<!-- <p class="tax-ref-wrapper">
+								<p class="tax-ref-wrapper">
 									<span class="">Sum Difference(ref):</span>
 									<span class="sum-ref dif tax-number"></span>	
-								</p> -->
+								</p>
 								<p class="total-tax-wrapper">
 									<span class="desc-tax">Sum without tax:</span>
-									<span class="price-ticket-1 tax-number"></span>
+									<span class="total-price-ticket-1 dif"></span>
 								</p>	
 							</div>	
-					</div>	
+					</div>	 -->
 				</div>
+			</div>
+		</div>
+	</div>
+	<div class="rule-wrapper">
+		<div class="container">
+			<div class="row">
+				<h1 class="w-100">Rule</h1>
 				<div class="col-md-12 rulee">
-					<h1>Rule</h1>
 					<div class="farerule d-flex flex-wrap">
 						<?php foreach($rule as $arr):?>
-						<p class="mr-5"><?=nl2br($arr['rule_text'])?></p>
+						<p class="mr-2"><?=nl2br($arr['rule_text'])?></p>
 						<?php endforeach;?>
 					</div>
-					
-					<div class="rule-wrapper">
-						<div class="row align-items-end">
-
-							<div class="col-md-3">
-								<div class="form-group">
-									<label for="fare_price">Choose User:</label>
-									<select id="id-select" class="form-control">
-									<?php foreach($data as $arr):?>
-										<option value=<?php echo $arr['id']?>><?=$arr['name_surname']?></option>
-									<?php endforeach;?>
-									</select>										
-								</div>		
-							</div>
-							<div class="col-md-3">
-								<div class="form-group">
-									<label for="fare_price">Fare text:</label>
-									<input type="text" class="form-control rule" id="fare-type">	
-								</div>		
-							</div>
-							<div class="col-md-3">
-								<div class="form-group">
-									<label for="percentage">Percentage: </label>
-									<input type="text" class="form-control rule" id="percentage">	
-								</div>		
-							</div>
-							<div class="col-md-3">
-								<button class="btn btn-success btn-calculate">Add</button>		
-							</div>							
-						</div>
-						<table class="table table-bordered" id="table-farerule">
-							<tr>
-								<th>ID</th>
-								<th>Name Surname</th>
-								<th>Price ticket(without tax)</th>
-								<th>Fare text</th>
-								<th>Percentage</th>
-								<th>Penalty</th>
-							</tr>
-						</table>
-					</div>
-					<form>
-						<div class="result-wrapper">
-							<p>
-								<span>Farerule penalty: </span>
-								<span class="sum-penalty-farerule tax-number pen">0 ТГ</span>
-							</p>
-							<p  class="mb-0">
-								<span>Result: </span>
-								<span class="result tax-number"></span>
-							</p>
-						</div>
-						<div class="input-wrapper" style="display: block">
-							<!-- <input type="text" name ="sum-ticket" class="price-ticket-v">
-							<input type="text" name = "sum-penalty-tax" class="sum-penalty-tax-v">
-							<input type="text" name = "sum-penalty-farerule" class="sum-penalty-farerule-v">
-							<input type="text" name = "sum-total-result" class="total-result-v"> -->
-
-						</div>
-						<div class="w-100  d-flex justify-content-end">
-							<input type="button" class="btn btn-success btn-submit mb-5 ml-auto" value="Send">
-						</div>	
-					</form>
-<!-- 
-					<?php foreach($sum_tax as $arr):?>
-						<div class="" style="display: none">
-								<p class="tax-id"><?=$arr['id']?></p>
-								<p><?=$arr['sum_tax']?></p>
-						</div>
-					<?php endforeach;?> -->
 				</div>
-				<!-- <div class="col-md-12 mt-3">
-					<div class="resultt">
-						<table class="table table-bordered" id="table-result">
-							<tr class="header">
-								<th>ID</th>
-								<th>name surname</th>
-								<th>price-ticket</th>
-								<th>sum-penalty</th>
-								<th>sum-tax</th>
-								<th>Refund</th>
-							</tr>
-						</table>
+				<div class="col-md-12">
+					
+					<div class="rule-wrapper mt-3">
+							<div class="row align-items-end mb-2">
+
+								<div class="col-md-3">
+									<div class="form-group">
+										<label for="fare_price">Choose User:</label>
+										<select id="id-select" class="form-control">
+										<?php foreach($data as $arr):?>
+											<option value=<?php echo $arr['id']?>><?=$arr['name_surname']?></option>
+										<?php endforeach;?>
+										</select>										
+									</div>		
+								</div>
+								<!-- <div class="col-md-3">
+									<div class="form-group">
+										<label for="fare_price">Fare text:</label>
+										<input type="text" class="form-control rule" id="fare-type">	
+									</div>		
+								</div> -->
+								<div class="col-md-3">
+									<div class="form-group">
+										<label for="percentage">Percentage: </label>
+										<input type="text" class="form-control rule" id="percentage">	
+									</div>		
+								</div>
+								<div class="col-md-3">
+									<button class="btn btn-success btn-calculate">Calculate</button>		
+								</div>							
+							</div>
+							<div class="row">
+								<div class="col-md-7">
+									<table class="table table-bordered" id="table-farerule">
+										<tr>
+											<th>ID</th>
+											<th>Name Surname</th>
+											<th>Price ticket(without tax)</th>
+											<th>Percentage</th>
+											<th>Penalty</th>
+										</tr>
+									</table>		
+								</div>
+							</div>
+							
 					</div>
-					<div id="output_r">
-						<?php foreach($sum_tax as $arr):?>
-							<p>
-								<span class="s"><?=$arr['id']?>:</span>
-								<span class="tax-number"></span>		
-							</p>
-						<?php endforeach; ?>
+				
+					<div class="result-wrapper">
+						<p>
+							<span>Farerule penalty: </span>
+							<span class="total-penalty-farerule tax-number pen">0</span>
+						</p>
+						<p  class="mb-0">
+							<span>Result: </span>
+							<span class="result dif"></span>
+						</p>
+					</div>
+					<div class="w-100  d-flex justify-content-end">
+						<input type="button" class="btn btn-success btn-submit mb-5 ml-auto" value="Send">
 					</div>	
 				</div>
-				 -->
 			</div>
 		</div>
 	</div>

@@ -3,12 +3,13 @@ require 'connect.php';
 //require 'db.php';
 $count = 0;
 foreach ($_POST as $key => $value) {
-	$sql = "UPDATE tax_data Set Refund='$value' WHERE id='$count'";
+	$sql = "INSERT INTO penalty_data Set price_penalty='$value' WHERE id='$count'";
 	$conn->query($sql);
 	$count++;
+  echo $value;
 }
 
-$get_tax_price = "SELECT tax_data.user_id, SUM(tax_data.price) as sum_tax FROM `tax_data` 
+/*$get_tax_price = "SELECT tax_data.user_id, SUM(tax_data.price) as sum_tax FROM `tax_data` 
 				  WHERE tax_data.Refund = 'non-refundable' GROUP BY tax_data.user_id";
 
 $result_tax_price = $conn->query($get_tax_price);
@@ -23,5 +24,5 @@ if($result_tax_price->num_rows > 0) {
       echo($row['user_id'] . "-"); 
       echo($row['sum_tax'] . "-");
     }
-  }
+  }*/
 ?>
