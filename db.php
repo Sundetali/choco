@@ -28,13 +28,13 @@
   }
 
   //select tax nature  
-  $get_tax_nature = "Select DISTINCT tax_nature From tax_data";
-  $result_select_1 = $conn->query($get_tax_nature);
-  $tax_nature = [];
+  $get_country_code = "Select DISTINCT country_code From tax_data";
+  $result_select_1 = $conn->query($get_country_code);
+  $country_code = [];
   if($result_select_1->num_rows > 0) {
     $i = 0;
     while($row = $result_select_1->fetch_assoc()) {
-      $tax_nature[$i]['tax_nature'] = $row['tax_nature'];
+      $country_code[$i]['country_code'] = $row['country_code'];
       $i++;
     }
   }
@@ -51,7 +51,7 @@
       $tax[$i]['price'] = $row['price'];
       $tax[$i]['tax_nature'] = $row['tax_nature'];
       $tax[$i]['country_code'] = $row['country_code'];
-      $tax[$i]['Refund'] = $row['Refund'];
+      $tax[$i]['Refund'] = $row[''];
       $i++;
     }
   }

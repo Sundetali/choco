@@ -57,10 +57,11 @@ $(document).ready(function() {
 		//insert result to table for each ref-result
 		var count = 0;
 		
-		$.each($('.tax-nature'), function() {
+		$.each($('.country-code'), function() {
 			var thiss = $(this);
 			//sometimes to tax-nature added exrtra spaces !!!! problem 
 			str = thiss.html().replace(/\s/g, '');
+			console.log(str);
 			for(var i=0; i<ref_non_list.length; i++) {
 				if(ref_non_list[i].name == str) {
 					thiss.closest('tr').find('.ref-result').html(ref_non_list[i].value);

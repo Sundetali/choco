@@ -2,6 +2,7 @@ import json
 import datetime
 import pandas as pd
 from sqlalchemy import create_engine
+from collections import Counter
 import pprint as pprint
 
 
@@ -11,7 +12,7 @@ pd.set_option('display.width', 1000)
 
 with open('bokking.json') as data_file:    
     data = json.load(data_file)
-use_data = data[33] # 0 17 38
+use_data = data[46]
 
 
 fare_id = use_data['cid']
@@ -19,19 +20,20 @@ ticket_info = use_data['js_ticket']
 load = json.loads(ticket_info)
 user_info = load['passes']
 
+print(fare_id)
 
-
-
-user_dict = {'id': [],'name': [],'surname': [],'total_price': [],'ticket_id': [], 'sum_tax': [], 'without_tax': [], 'sum_penalty': [], 'refund': []}
-tax_dict = {'user_id': [], 'price': [],'tax_nature': [],'country_code': [], 'Refund': []}
+user_dict = {'id': [],'name': [],'surname': [],'ticket_id': [],'total_price': [],'sum_tax':[],'without_tax': [],'sum_penalty': [],'refund':[]}
+tax_dict = {'user_id': [], 'price': [],'tax_nature': [],'country_code': [],'Refund':[]}
 dep_dict = {'user_id': [], 'status': [], 'dep_time': [], 'arr_time': [], 'from_loc': [], 'to_loc': [],'fare_basis': []}
-last = {'name': [],'surname': [],'from_loc': [],'total_price': [],'tax': [],'penalty': [],'to_return': [],'fare_basis':[]}
+last = {'name': [],'surname': [],'ticket_id': [],'total_price': [],'sum_tax':[],'without_tax': [],'sum_penalty': [],'refund':[]}
 dep_new_dict = {'user_id': [], 'status': [],'loc': [],'fare_basis': []}
 
 arr = []
 fare_list = []
+amount_price = {}
 
 def getUser(data):
+
     count = 1
     for i in data:
         user_dict['id'].append(count)
@@ -44,15 +46,15 @@ def getUser(data):
         user_dict['sum_penalty'].append(0)
         user_dict['refund'].append(int(i['TotalFare']))
 
-
         arr.append("")
         fare_list.append("")
+        amount_price.update({count: 0})
 
         for route in i['Routes']:
             # pprint.pprint(route)
             arr_time = (datetime.datetime.strptime(route['ArrivalDate'], '%Y-%m-%dT%H:%M:%S'))
             dep_time = (datetime.datetime.strptime(route['DepartureDate'], '%Y-%m-%dT%H:%M:%S'))
-            print(dep_time)
+
             dep_dict['user_id'].append(count)
             dep_dict['status'].append(calc(route['DepartureDate']))
             dep_dict['dep_time'].append(dep_time)
@@ -75,13 +77,14 @@ def getUser(data):
 
     fare_rule = getFare(fare_list)
 
-    dp = pd.DataFrame(data = dep_dict)
-    print(dp)
+
+    print(arr)
+
+
 
     count_save = 0
     for i in range(0, (count-1)):
-        isExist = Checker(arr[count_save][:-1],  ' '.join(fare_rule[count_save]))
-        print(arr[count_save], ' '.join(fare_rule[count_save]))
+        isExist = Checker(arr[count_save].strip(),  ' '.join(fare_rule[count_save]))
 
         dep_new_dict['user_id'].append(i+1)
         dep_new_dict['loc'].append(arr[count_save][:-1])
@@ -90,23 +93,62 @@ def getUser(data):
 
         if len(isExist) == 0:
             # saveToSQL(user_df, tax_df, dep_df, saveRule())
-            print('yeap')
+            print('')
         else:
-            penalty = ((int(user_dict['total_price'][i]) - isExist['tax']) * isExist['penalty']) / 100
-            to_return = (int(user_dict['total_price'][i]) - penalty)
+          
+            tax_sum = getStructedTax(isExist['tax_nature'], amount_price)
+
+
+            penalty = ((((int(user_dict['total_price'][i]) - tax_sum[i+1]) * isExist['penalty']) / 100) + isExist['penalty_price'])
+
+
+            to_return = (int(user_dict['total_price'][i]) - penalty - tax_sum[i+1] )
+            without_tax = (int(user_dict['total_price'][i]) - tax_sum[i+1] )
+
 
             last['name'].append(user_dict['name'][i])
             last['surname'].append(user_dict['surname'][i])
-            last['from_loc'].append(arr[count_save][:-1])
+            last['ticket_id'].append(user_dict['ticket_id'][i])
             last['total_price'].append(int(user_dict['total_price'][i]))
-            last['tax'].append(isExist['tax'])
-            last['penalty'].append(penalty)
-            last['to_return'].append(to_return)
-            last['fare_basis'].append(' '.join(fare_rule[count_save]))
+            last['sum_tax'].append(tax_sum[i+1])
+            last['without_tax'].append(without_tax)
+            last['sum_penalty'].append(int(penalty))
+            last['refund'].append(int(to_return))
+
         count_save += 1
 
     saveToSQL(user_dict, tax_dict, dep_new_dict, getRule())
     saveLastData(last)
+
+
+
+## Checks same info exists or not
+def Checker(dep_dict,fare):
+    engine = getConnection()
+    con = engine.connect()
+    execute = con.execute('select * from save_data;')
+    a = {}
+    for i in execute:
+        if (i['segment'].strip() == dep_dict and (i['fare_basis'].strip()) == fare):
+            a = i
+    return a
+
+
+
+def getStructedTax(a, amount_price):
+    for i in a.split(' '):
+        amount = getTaxAmount(tax_dict, i)
+        amount_price = dict(Counter(amount) + Counter(amount_price));
+    return amount_price
+
+
+##Tax Amount
+def getTaxAmount(tax_dict,tax_sql):
+    amount = {}
+    for i in range (len(tax_dict['tax_nature'])):
+        if (tax_dict['tax_nature'][i] == tax_sql):
+            amount.update({tax_dict['user_id'][i]: tax_dict['price'][i]})
+    return amount
 
 
 ##Connection with SQL
@@ -122,20 +164,9 @@ def calc(dep_time):
 
     # dep = int(datetime.datetime.strptime(dep_time, '%Y-%m-%dT%H:%M:%S').strftime("%s"))
     # date_now = int(datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S').strftime("%s"))
+
     return 'open'
 
-
-## Checks same info exists or not
-def Checker(dep_dict,fare):
-    engine = getConnection()
-    con = engine.connect()
-    execute = con.execute('select * from save_data;')
-    a = {}
-
-    for i in execute:
-        if (i['from_loc'] == dep_dict and (i['fare_basis']) == fare):
-            a = i
-    return a
 
 def getFare(fare_list):
     temp = []
@@ -150,8 +181,6 @@ def getFare(fare_list):
             temp.append(a)
         except:
             temp.append(fare_list[fare_l])
-    # print(' '.join(temp[0]))
-    # print(temp, '!!!!!!!!!')
     return temp
 
 
@@ -186,8 +215,11 @@ def saveToSQL(user, tax, dep, rule):
     dep_df = pd.DataFrame(data = dep)
     tax_df = pd.DataFrame(data = tax)
 
-    print('SAVESQL')
-    print(dep)
+    print(user_df)
+    print(dep_df)
+    print(tax_df)
+
+    # print(dep)
 
     engine = getConnection()
 
@@ -203,6 +235,7 @@ def saveToSQL(user, tax, dep, rule):
 def saveLastData(last):
     print(last)
     last_df = pd.DataFrame(data = last)
+    last_df.index.name = 'id'
 
     engine = getConnection()
     last_df.to_sql(name='last_data', con=engine, if_exists='replace')
