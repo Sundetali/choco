@@ -12,7 +12,7 @@ pd.set_option('display.width', 1000)
 
 with open('bokking.json') as data_file:    
     data = json.load(data_file)
-use_data = data[46]
+use_data = data[38]# 38 46 
 
 
 fare_id = use_data['cid']
@@ -84,7 +84,7 @@ def getUser(data):
 
     count_save = 0
     for i in range(0, (count-1)):
-        isExist = Checker(arr[count_save].strip(),  ' '.join(fare_rule[count_save]))
+        isExist = Checker(arr[count_save].strip(),  ' '.join(fare_rule[count_save] ))
 
         dep_new_dict['user_id'].append(i+1)
         dep_new_dict['loc'].append(arr[count_save][:-1])
@@ -129,7 +129,8 @@ def Checker(dep_dict,fare):
     execute = con.execute('select * from save_data;')
     a = {}
     for i in execute:
-        if (i['segment'].strip() == dep_dict and (i['fare_basis'].strip()) == fare):
+        if (i['segment'].strip() == dep_dict and (i['fare_basis'].strip()) == fare.strip() ):
+            print(i['tax_nature'])
             a = i
     return a
 
@@ -145,8 +146,9 @@ def getStructedTax(a, amount_price):
 ##Tax Amount
 def getTaxAmount(tax_dict,tax_sql):
     amount = {}
-    for i in range (len(tax_dict['tax_nature'])):
-        if (tax_dict['tax_nature'][i] == tax_sql):
+    for i in range (len(tax_dict['country_code'])):
+        if (tax_dict['country_code'][i] == tax_sql):
+            print(tax_dict['country_code'][i],"in")
             amount.update({tax_dict['user_id'][i]: tax_dict['price'][i]})
     return amount
 

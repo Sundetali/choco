@@ -200,8 +200,8 @@
 							<input type="text" class="fare-val" name="fare-val">
 							<input type="text" class="percentage-val" name="percentage-val">
 							<input type="text" class="number-val" name="number-val">
-
-
+							<input type="text" class="fare">
+		
 							<input type="hidden" value="" id="user-table-data" name="user-table-data">
 							<input type="hidden" value="" id="tax-list-table-data" name="tax-list-table-data">
 							<input type="hidden" value="" id="tax-table-data" name="tax-table-data">
@@ -225,9 +225,7 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<!-- <script src="js/main.js"></script> -->
-	<script src="/main.js">
-		
-	</script>
+	
 	<script>
 		$(document).ready(function() {
 			//validation for empty to each input
@@ -292,7 +290,7 @@
 					var thiss = $(this);
 					//sometimes to tax-nature added exrtra spaces !!!! problem 
 					str = thiss.html().replace(/\s/g, '');
-					console.log(str);
+					
 					for(var i=0; i<ref_non_list.length; i++) {
 						if(ref_non_list[i].name == str) {
 							thiss.closest('tr').find('.ref-result').html(ref_non_list[i].value);
@@ -361,6 +359,13 @@
 				
 			});
 			
+			//in onchange event clean input values
+			
+			$('select.user-select').on('change', function() {
+				$('.percentage').val('');
+				$('.number').val('');
+			}); 
+
 			//percent to number
 			$('.percentage').on('input', function() {
 				
@@ -386,6 +391,19 @@
 				}
 			});
 
+			//shoud be changed
+			$('.percentage').focus(function() {
+				var rule_wrapper = $(this).closest('.rule-wrapper');
+				rule_wrapper.find('.number').val('');				
+			});
+
+			$('.number').focus(function() {
+				var rule_wrapper = $(this).closest('.rule-wrapper');
+				$(this).val('');
+				rule_wrapper.find('.percentage').val('');				
+			});
+
+
 			$('.btn-calculate').click(function() {
 				var rule_wrapper = $(this).closest('.rule-wrapper');
 				if(!$(this).isEmpty(rule_wrapper.find('input.rule'))) {
@@ -398,6 +416,7 @@
 					$.each($('.id'), function() {
 						var thiss = $(this); 
 						var tr = thiss.closest('tr');
+				
 						if(thiss.html() == user_select) {
 							var id = tr.find('.id').html();
 							var name_surname = tr.find('.name-surname').html();
@@ -413,15 +432,52 @@
 					});
 
 
+					var sum_penalty_arr = [];
+					$.each($('.table-farerule'), function() {
+						var dic = {};
+						var sum_percentage = 0;
+						var sum_penalty = 0;
+						$.each($(this).find('.percentage-1'), function() {
+							if($(this).closest('tr').find('.user_id').text() == 1) {
+								if($(this).text() != ''){
+									sum_percentage+=parseInt($(this).text());
+									sum_penalty+=parseInt($(this).closest('tr').find('.penalty-farerule').text());	
+								}
+							}
+													
+						});
+
+						dic['fare'] = $(this).closest('.farerule').find('h4').text();
+						dic['sum_percentage'] = sum_percentage;
+						dic['sum_penalty'] = sum_penalty;
+						sum_penalty_arr.push(dic);
+					});
+
+					var max_percentage = 0;
+					var max_penalty = 0;
+					var fare_basis = '';
+					$.each(sum_penalty_arr, function() {
+						if($(this)[0].sum_percentage > max_percentage) {
+							max_percentage = $(this)[0].sum_percentage; 	
+							max_penalty = $(this)[0].sum_penalty;
+							fare_basis = $(this)[0]['fare'];
+						}
+					});
+					$('.percentage-val').val(max_percentage + '%');
+					$('.number-val').val(max_penalty);
+					$('.fare').val(fare_basis);
+
+	
 					$.each($('.id'), function() {
 						var this_user = $(this);
 						var sum_penalty = 0;
-						
 						$.each($('.user_id'), function() {
 							if($(this).html() == this_user.html()) {
 								sum_penalty+=parseInt($(this).closest('tr').find('.penalty-farerule').html());
 							}
 						});
+
+
 						var sum_without_tax = parseInt(this_user.closest('tr').find('.without_tax').html()); 
 						
 						this_user.closest('tr').find('.sum_penalty').html(sum_penalty);
@@ -440,25 +496,8 @@
 
 				};
 
-
+				/*$('.percentage-val').val(sum_percentage + '%');*/
 				
-				var sum_percentage = 0;
-				var sum_number = 0;
-				var size = 0;
-				$.each($('.percentage-1'), function(){	
-					var value = $(this).html();
-					if(value != '') {
-						sum_percentage+=parseInt(value);
-						size++;
-					}
-					else {
-						var number = parseInt($(this).closest('tr').find('.penalty-farerule').html());
-						console.log(number);
-						sum_number+=number;
-					}
-				});
-				$('.percentage-val').val(sum_percentage + '%');
-				$('.number-val').val(sum_number);
 
 				return false;
 			});
@@ -515,7 +554,7 @@
 			$.each($('h4'), function() {
 				str_fare+=$(this).text() + " ";
 			});
-			console.log(str_fare);
+			
 			$('.fare-val').val(str_fare);
 });		
 	</script>
