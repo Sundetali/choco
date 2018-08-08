@@ -147,7 +147,7 @@
 						</div>
 						<div class="rule-wrapper">
 							<div class="row align-items-end mb-2">
-								<div class="col-md-3">
+								<!-- <div class="col-md-3">
 									<div class="form-group">
 										<label for="fare_price">Choose User:</label>
 										<select class="form-control user-select">
@@ -155,12 +155,6 @@
 											<option value=<?php echo $arr['id']?>><?=$arr['name_surname']?></option>
 										<?php endforeach;?>
 										</select>										
-									</div>		
-								</div>
-								<!-- <div class="col-md-3">
-									<div class="form-group">
-										<label for="fare_price">Fare text:</label>
-										<input type="text" class="form-control rule" id="fare-type">	
 									</div>		
 								</div> -->
 								<div class="col-md-2">
@@ -359,50 +353,6 @@
 				
 			});
 			
-			//in onchange event clean input values
-			
-			$('select.user-select').on('change', function() {
-				$('.percentage').val('');
-				$('.number').val('');
-			}); 
-
-			//percent to number
-			$('.percentage').on('input', function() {
-				
-				var thiss = $(this);
-				var rule_wrapper = thiss.closest('.rule-wrapper');
-					
-				if(thiss.val() != '') {
-					var percentage = parseInt($(this).val());
-					var user_select = rule_wrapper.find('.user-select').val();
-					
-					$.each($('.id'), function() {
-						if($(this).html() == user_select) {
-							var tr = $(this).closest('tr');
-							var sum_without_tax = parseInt(tr.find('.without_tax').html());
-							var number = parseInt((sum_without_tax * (percentage / 100)));
-							rule_wrapper.find('.number').val(number);		
-						};	
-
-					});
-				}
-				else {
-					rule_wrapper.find('.number').val('');	
-				}
-			});
-
-			//shoud be changed
-			$('.percentage').focus(function() {
-				var rule_wrapper = $(this).closest('.rule-wrapper');
-				rule_wrapper.find('.number').val('');				
-			});
-
-			$('.number').focus(function() {
-				var rule_wrapper = $(this).closest('.rule-wrapper');
-				$(this).val('');
-				rule_wrapper.find('.percentage').val('');				
-			});
-
 
 			$('.btn-calculate').click(function() {
 				var rule_wrapper = $(this).closest('.rule-wrapper');
@@ -410,25 +360,25 @@
 					
 					//get value from form
 					var percentage = rule_wrapper.find('.percentage').val();
-					var user_select = rule_wrapper.find('.user-select').val();
-					//var id = rule_wrapper.find('.id');
+					var price_penalty = rule_wrapper.find('.number').val();
+					
 					//add table for penalty
 					$.each($('.id'), function() {
 						var thiss = $(this); 
 						var tr = thiss.closest('tr');
 				
-						if(thiss.html() == user_select) {
-							var id = tr.find('.id').html();
-							var name_surname = tr.find('.name-surname').html();
-							var sum_tax = tr.find('.without_tax').html();
-							
-							var number = rule_wrapper.find('.number').val();
+						var id = tr.find('.id').html();
+						var name_surname = tr.find('.name-surname').html();
+						var sum_without_tax = tr.find('.without_tax').html();
+						var number =  percentage != '' ? parseInt( (parseInt(percentage) / 100) * sum_without_tax) : price_penalty;
+						
 
-							rule_wrapper.find('table').append("<tr><td class='user_id'>"+ id +"</td>><td class='name'>"+ 
-							name_surname+"</td><td class='ticket_price'>"+sum_tax+"</td><td class='percentage-1'>"+ 
-							percentage +"</td><td class='penalty-farerule pen'>"+ number
-							+"</td><td><button class='btn btn-danger m-0'>Delete</button></td></tr>");
-						}
+						console.log(number);
+						rule_wrapper.find('table').append("<tr><td class='user_id'>"+ id +"</td>><td class='name'>"+ 
+						name_surname+"</td><td class='ticket_price'>"+sum_without_tax+"</td><td class='percentage-1'>"+ 
+						percentage +"</td><td class='penalty-farerule pen'>"+ number
+						+"</td><td><button class='btn btn-danger m-0'>Delete</button></td></tr>");
+					
 					});
 
 

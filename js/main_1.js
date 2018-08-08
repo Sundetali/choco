@@ -134,29 +134,6 @@ $(document).ready(function() {
 	});
 	
 	//percent to number
-	$('.percentage').on('input', function() {
-		
-		var thiss = $(this);
-		var rule_wrapper = thiss.closest('.rule-wrapper');
-			
-		if(thiss.val() != '') {
-			var percentage = parseInt($(this).val());
-			var user_select = rule_wrapper.find('.user-select').val();
-			
-			$.each($('.id'), function() {
-				if($(this).html() == user_select) {
-					var tr = $(this).closest('tr');
-					var sum_without_tax = parseInt(tr.find('.without_tax').html());
-					var number = parseInt((sum_without_tax * (percentage / 100)));
-					rule_wrapper.find('.number').val(number);		
-				};	
-
-			});
-		}
-		else {
-			rule_wrapper.find('.number').val('');	
-		}
-	});
 	//focusout and focus in input
 
 
@@ -165,25 +142,22 @@ $(document).ready(function() {
 		if(!$(this).isEmpty(rule_wrapper.find('input.rule'))) {
 			
 			//get value from form
-			var percentage = rule_wrapper.find('.percentage').val();
-			var user_select = rule_wrapper.find('.user-select').val();
+			var percentage = parseInt(rule_wrapper.find('.percentage').val());
 			
 			//add table for penalty
 			$.each($('.id'), function() {
 				var thiss = $(this); 
 				var tr = thiss.closest('tr');
-				if(thiss.html() == user_select) {
-					var id = tr.find('.id').html();
-					var name_surname = tr.find('.name-surname').html();
-					var sum_tax = tr.find('.without_tax').html();
-					
-					var number = rule_wrapper.find('.number').val();
+				var name_surname = tr.find('.name-surname').html();
+				var sum_without_tax = parseInt(tr.find('.without_tax').html());
+				
+				var number = parseInt( (sum_without_tax ) * percentage / 100 ) 
 
-					rule_wrapper.find('table').append("<tr><td class='user_id'>"+ id +"</td>><td class='name'>"+ 
-					name_surname+"</td><td class='ticket_price'>"+sum_tax+"</td><td class='percentage'>"+ 
-					percentage +"</td><td class='penalty-farerule pen'>"+ number
-					+"</td><td><button class='btn btn-danger m-0'>Delete</button></td></tr>");
-				}
+				rule_wrapper.find('table').append("<tr><td class='user_id'>"+ id +"</td>><td class='name'>"+ 
+				name_surname+"</td><td class='ticket_price'>"+sum_without_tax+"</td><td class='percentage'>"+ 
+				percentage +"</td><td class='penalty-farerule pen'>"+ number
+				+"</td><td><button class='btn btn-danger m-0'>Delete</button></td></tr>");
+			
 			});
 
 

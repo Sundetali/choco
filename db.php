@@ -6,9 +6,33 @@
   $query_select = "Select * From user_data Join dep_data 
                     On user_data.id = dep_data.user_id";
   
+  $query_select_last = "Select * From last_data Join dep_data 
+                    On last_data.id = dep_data.user_id";
+  
   $result_select = $conn->query($query_select);
+  $result_select_last = $conn->query($query_select_last);
+
   $data = [];
-  if($result_select->num_rows > 0) {
+
+  if($result_select_last->num_rows > 0) {
+    $i=0;
+    while($row = $result_select_last->fetch_assoc()) {
+      $data[$i]['id'] = $row['user_id']; 
+      $data[$i]['name_surname'] = $row['name'] . ' ' . $row['surname'];
+      $data[$i]['ticket_id'] = $row['ticket_id'];
+      $data[$i]['total_price'] = $row['total_price'];
+      $data[$i]['status'] = $row['status'];
+      $data[$i]['loc'] = $row['loc'];
+      $data[$i]['fare_basis'] = $row['fare_basis'];
+      $data[$i]['sum_tax'] = $row['sum_tax'];
+      $data[$i]['without_tax'] = $row['without_tax'];
+      $data[$i]['sum_penalty'] = $row['sum_penalty'];
+      $data[$i]['refund'] = $row['refund'];
+      
+      $i++;
+    }
+  }
+  else {
     $i=0;
     while($row = $result_select->fetch_assoc()) {
       $data[$i]['id'] = $row['user_id']; 
