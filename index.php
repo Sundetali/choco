@@ -8,14 +8,64 @@
 	<meta charset="UTF-8">
 	<title>AviaAgent</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-	<link rel="stylesheet" href="style.css">
+	<!-- <link rel="stylesheet" href="style.css"> -->
+	<style>
+		body, html {
+			padding: 0;
+			margin: 0;
+			font-size: 12px;
+			padding-top: .5rem;
+		}
+		h1 {
+			margin-bottom: 1rem;
+			padding-bottom: .5rem;
+			border-bottom: 2px solid #000;
+		}
+		.btn {
+			margin-bottom: 1rem;
+		}
+		.tax-number {
+			font-weight: bold;
+		}
+		table .difference {
+			font-weight: bold;
+		}
+		table .penalty-tax {
+			font-weight: bold;
+		}
+		table th,
+		table td {
+			padding:0.3rem 1rem!important;
+		}
+		table tr {
+			padding: 0;
+		}
+		.table-farerule td {
+			padding: 0!important;
+		}
+		.dif {
+			color: green;
+		}
+		.pen {
+			color: red;
+		}
+		.dif, .pen {
+			font-weight: bold;
+		}
+		.farerule p {
+			height: 300px;
+			max-width: 250px;
+			overflow-y: scroll;
+
+		}
+	</style>
 	
 </head>
 <body>
 	<div class="user-info">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-9">
+				<div class="col-md-12">
 					<h1>User Info</h1>
 					<form>
 						<table class="table table-bordered" id="user-table">
@@ -78,34 +128,13 @@
 						</table>		
 					</form>
 				</div>
-				<div class="col-md-3" id="div-tax-ist-table">
-					<h1>Tax list</h1>
-					<table class="table table-bordered" id="tax-list-table">
-						<tr>
-							<th>Country code</th>
-							<th>Ref / Non</th>
-						</tr>
-						<?php foreach($country_code as $arr):?>
-						<tr>
-							<td class="ref-non"><?=$arr['country_code']?></td>
-							<td class="ref-non-select">
-								<select class="tax-select" name=<?=$arr['country_code']?> id="">
-									<option value="non-refundable">non-refundable</option>
-									<option value="refundable">refundable</option>
-								</select>
-							</td>
-						</tr>
-						<?php endforeach; ?>
-					</table>
-					<button class="btn btn-success btn-ref-non">Add</button>
-				</div>
 			</div>
 		</div>
 	</div>
 	<div class="tax-list">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-9">
+				<div class="col-md-12">
 					<h1>Tax</h1>
 					<form id="tax-form">
 						<table class="table table-bordered" id="tax-table">
@@ -137,8 +166,8 @@
 	<div class="rule-wrapper">
 		<div class="container">
 			<div class="row">
-				<h1 class="w-100">Rule</h1>
-				<div class="col-md-12 rulee">
+				<div class="col-md-9">
+					<h1 class="w-100">Rule</h1>
 					<?php foreach($rule as $key => $arr):?>
 					<div class="farerule d-flex flex-wrap mb-3">
 						<div class="fare-text mr-3">
@@ -186,9 +215,37 @@
 					</div>
 					<?php endforeach;?>
 				</div>
+				<div class="col-md-3" id="div-tax-ist-table">
+					<h1>Tax list</h1>
+					<table class="table table-bordered" id="tax-list-table">
+						<tr>
+							<th>Country code</th>
+							<th>Ref / Non</th>
+						</tr>
+						<?php foreach($country_code as $arr):?>
+						<tr>
+							<td class="ref-non"><?=$arr['country_code']?></td>
+							<td class="ref-non-select">
+								<select class="tax-select" name=<?=$arr['country_code']?> id="">
+									<option value="non-refundable">non-refundable</option>
+									<option value="refundable">refundable</option>
+								</select>
+							</td>
+						</tr>
+						<?php endforeach; ?>
+					</table>
+					<button class="btn btn-success btn-ref-non">Add</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer>
+		<div class="container">
+			<div class="row">
 				<div class="col-md-12">
+					
 					<form action="send.php" id="send_form" method="POST">
-						<div class="w-100  d-flex justify-content-end">
+						<div class="w-100">
 							<input type="text" class="" name="segment" value="<?=$data[0]['loc']?>" >
 							<input type="text" class="tax-val" name="tax-val">
 							<input type="text" class="fare-val" name="fare-val">
@@ -205,14 +262,13 @@
 								<input type="hidden" value="" id="" class="table-farerule-data" name=<?='data-table-farerule-' . $key?>>
 							<?php endforeach;?>
 							<input type="hidden" value="<?=$size?>" name="size">
-							<input type="submit" class="btn btn-success btn-submit mb-5 ml-auto" value="Send">
+							<input type="submit" class="btn btn-success btn-submit mb-5 d-block ml-auto" value="Send">
 						</div>	
 					</form>
-						
 				</div>
 			</div>
 		</div>
-	</div>
+	</footer>
 	
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -373,13 +429,19 @@
 						var number =  percentage != '' ? parseInt( (parseInt(percentage) / 100) * sum_without_tax) : price_penalty;
 						
 
-						console.log(number);
 						rule_wrapper.find('table').append("<tr><td class='user_id'>"+ id +"</td>><td class='name'>"+ 
 						name_surname+"</td><td class='ticket_price'>"+sum_without_tax+"</td><td class='percentage-1'>"+ 
 						percentage +"</td><td class='penalty-farerule pen'>"+ number
-						+"</td><td><button class='btn btn-danger m-0'>Delete</button></td></tr>");
+						+"</td></tr>");
 					
 					});
+					//remove all button than add with new button 
+					$('.btn-danger').closest('td').remove();
+					$.each($('.user_id'), function() {
+						if($(this).html() == 1) {
+							$(this).closest('tr').append("<td><button class='btn btn-danger m-0'>Delete</button></td>");
+						}
+					})
 
 
 					var sum_penalty_arr = [];
@@ -431,7 +493,7 @@
 								$.each(table, function() {
 									if($(this).html() == this_user.html()) {		
 										sum_penalty+=parseInt($(this).closest('tr').find('.penalty-farerule').html());
-										console.log($(this).html());
+									
 									}
 								});
 							}
@@ -469,9 +531,43 @@
 			//remove row for click event
 			$('body').on('click', '.btn-danger', function() {
 				var tr_penalty = $(this).closest('tr');
+				
+				var arr = [];
+				var next_tr = tr_penalty;
+				
+
 				//change each user's sum penalty
+				//add all tr after delete button's tr and count each sum client's penalty
+
 				$.each($('.id'), function() {
-					var tr_user = $(this).closest('tr');
+					var td = $(this).closest('tr').find('.sum_penalty');
+					var prev_sum_penalty = parseInt(td.text());
+					var penalty_price = parseInt(next_tr.find('.penalty-farerule').text());
+					
+					td.text(prev_sum_penalty - penalty_price);
+					
+					arr.push(next_tr);
+					next_tr = next_tr.next();
+					
+				});
+				//remove neccessary all tr after buttons' tr
+				$.each(arr, function() {
+					$(this).remove();
+				});
+				////
+				var percentage = tr_penalty.find('.percentage-1');
+				var number =  tr_penalty.find('.penalty-farerule');
+				if(percentage.text() != '') {
+					var prev_max = parseInt($('.percentage-val').val());
+					$('.percentage-val').val(prev_max - parseInt(percentage.text()) + '%');
+				}
+				else {
+					var prev_max = parseInt($('.number-val').val());
+					$('.number-val').val(prev_max - parseInt(number.text()));
+
+				}
+				/*$.each($('.id'), function() {
+					var tr_user = $(this).closest('tr');	
 					if($(this).html() == tr_penalty.find('.user_id').html()) {
 
 						var penalty_price = parseInt(tr_penalty.find('.penalty-farerule').html());
@@ -484,8 +580,7 @@
 						tr_user.find('.refund').html(sum_without_tax - sum_penalty);
 					}
 				});
-				$(this).closest('tr').remove();
-
+				*/
 				total_tax = $(this).getTotal($('.sum_tax'));
 				total_without_tax = $(this).getTotal($('.without_tax'));
 				total_penalty = $(this).getTotal($('.sum_penalty'));
