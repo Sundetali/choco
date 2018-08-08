@@ -13,7 +13,7 @@
 	$percentage_val = $_POST['percentage-val'];
 	$number_val = $_POST['number-val'];
 
-	$sql = "INSERT INTO save_data (segment, fare_basis, tax_nature, penalty, penalty_price) VALUES ('$segment', '$fare_val', '$tax_val', '$percentage_val', '$number_val')";
+	$sql = "INSERT INTO save_data (segment, fare_basis, country_code , penalty, penalty_price) VALUES ('$segment', '$fare_val', '$tax_val', '$percentage_val', '$number_val')";
 	$conn->query($sql);
 
 

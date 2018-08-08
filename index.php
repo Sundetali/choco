@@ -441,6 +441,8 @@
 							if($(this).closest('tr').find('.user_id').text() == 1) {
 								if($(this).text() != ''){
 									sum_percentage+=parseInt($(this).text());
+								}
+								else {
 									sum_penalty+=parseInt($(this).closest('tr').find('.penalty-farerule').text());	
 								}
 							}
@@ -471,19 +473,31 @@
 					$.each($('.id'), function() {
 						var this_user = $(this);
 						var sum_penalty = 0;
-						$.each($('.user_id'), function() {
+						//find max percentage's fare_base
+						$.each($('h4'), function() {
+							if($(this).html() == fare_basis) {
+								var table = $(this).closest('.farerule').find('.user_id');
+								//than run loop by id 
+								$.each(table, function() {
+									if($(this).html() == this_user.html()) {		
+										sum_penalty+=parseInt($(this).closest('tr').find('.penalty-farerule').html());
+										console.log($(this).html());
+									}
+								});
+							}
+						});		
+						/*$.each($('.user_id'), function() {
 							if($(this).html() == this_user.html()) {
 								sum_penalty+=parseInt($(this).closest('tr').find('.penalty-farerule').html());
 							}
-						});
-
+						});*/
 
 						var sum_without_tax = parseInt(this_user.closest('tr').find('.without_tax').html()); 
 						
 						this_user.closest('tr').find('.sum_penalty').html(sum_penalty);
 						this_user.closest('tr').find('.refund').html(sum_without_tax - sum_penalty);
 					});
-
+				
 					total_tax = $(this).getTotal($('.sum_tax'));
 					total_without_tax = $(this).getTotal($('.without_tax'));
 					total_penalty = $(this).getTotal($('.sum_penalty'));
