@@ -15,15 +15,22 @@
 			margin: 0;
 			font-size: 12px;
 			padding-top: .5rem;
+			background: url(img/background.jpg) repeat-y center 0;
+			color: #212c5b;
 		}
 		h1 {
 			margin-bottom: 1rem;
 			padding-bottom: .5rem;
-			border-bottom: 2px solid #000;
+			color: #212c5b;
 		}
 		.btn {
 			margin-bottom: 1rem;
 		}
+		.btn-orange {
+			background: #fe9922;
+			color: #fff;
+		}
+
 		.tax-number {
 			font-weight: bold;
 		}
@@ -36,12 +43,21 @@
 		table th,
 		table td {
 			padding:0.3rem 1rem!important;
+			color: #353535;
+			border-color: #9ea3b7!important;
 		}
 		table tr {
 			padding: 0;
 		}
+
+		.td-remove {
+			border: none!important;
+		}
 		.table-farerule td {
 			padding: 0!important;
+		}
+		#tax-table .ref-non-input {
+			display: none;
 		}
 		.dif {
 			color: green;
@@ -62,13 +78,16 @@
 	
 </head>
 <body>
+	<header>
+		<img src="img/logo.png" alt="choco logo" class="d-block mx-auto">
+	</header>
 	<div class="user-info">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
 					<h1>User Info</h1>
 					<form>
-						<table class="table table-bordered" id="user-table">
+						<table class="table" id="user-table">
 							<tr>
 								<th>ID</th>
 								<th>Name Surname</th>
@@ -105,25 +124,11 @@
 								<td></td>
 								<td></td>
 								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-
-							<tr>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
 								<td class="total-price-ticket tax-number"></td>
 								<td class="total-penalty-tax pen"></td>
 								<td class="total-price-ticket-1 dif"></td>
 								<td class="total-penalty-farerule pen"></td>
-								<td class="result dif"></td>
-								
+								<td class="result dif"></td>			
 							</tr>
 						</table>		
 					</form>
@@ -176,30 +181,20 @@
 						</div>
 						<div class="rule-wrapper">
 							<div class="row align-items-end mb-2">
-								<!-- <div class="col-md-3">
-									<div class="form-group">
-										<label for="fare_price">Choose User:</label>
-										<select class="form-control user-select">
-										<?php foreach($data as $arr):?>
-											<option value=<?php echo $arr['id']?>><?=$arr['name_surname']?></option>
-										<?php endforeach;?>
-										</select>										
-									</div>		
-								</div> -->
 								<div class="col-md-2">
 									<div class="form-group">
 										<label for="percentage">Percentage: </label>
 										<input type="text" class="form-control rule percentage">	
 									</div>		
 								</div>
-								<div class="col-md-2">
+								<div class="col-md-3">
 									<div class="form-group">
 										<label for="number">Price: </label>
 										<input type="text" class="form-control rule number">	
 									</div>		
 								</div>
 								<div class="col-md-3">
-									<button class="btn btn-success btn-calculate">Calculate</button>		
+									<button class="btn btn-calculate btn-orange">Calculate</button>		
 								</div>							
 							</div>
 							<table class="table table-bordered table-farerule" id=<?='table-farerule-' . $key?>>
@@ -234,7 +229,7 @@
 						</tr>
 						<?php endforeach; ?>
 					</table>
-					<button class="btn btn-success btn-ref-non">Add</button>
+					<button class="btn btn-ref-non btn-orange">Add</button>
 				</div>
 			</div>
 		</div>
@@ -251,18 +246,18 @@
 							<input type="text" class="fare-val" name="fare-val">
 							<input type="text" class="percentage-val" name="percentage-val">
 							<input type="text" class="number-val" name="number-val">
-							<input type="text" class="fare">
+						
 		
 							<input type="hidden" value="" id="user-table-data" name="user-table-data">
 							<input type="hidden" value="" id="tax-list-table-data" name="tax-list-table-data">
 							<input type="hidden" value="" id="tax-table-data" name="tax-table-data">
 							<?php foreach($rule as $key => $arr):
 								$size += 1;
-								?>
-								<input type="hidden" value="" id="" class="table-farerule-data" name=<?='data-table-farerule-' . $key?>>
+							?>
+							<input type="hidden" value="" id="" class="table-farerule-data" name=<?='data-table-farerule-' . $key?>>
 							<?php endforeach;?>
 							<input type="hidden" value="<?=$size?>" name="size">
-							<input type="submit" class="btn btn-success btn-submit mb-5 d-block ml-auto" value="Send">
+							<input type="submit" class="btn btn-submit mb-5 d-block ml-auto btn-orange" value="Send">
 						</div>	
 					</form>
 				</div>
@@ -280,13 +275,14 @@
 		$(document).ready(function() {
 			//validation for empty to each input
 			$.fn.isEmpty = function(formInput) {
-				var empty = false;
+				var empty = true;
 				$.each(formInput, function() {
-					if($(this).val() == '') {
-						return empty = $(this).val() == '';
+					if($(this).val() != '') {
+						return empty = false;
 					}
 				});
-				return false; //empty;
+				console.log(empty);
+				return empty;
 			}
 			$.fn.getTotal = function(sum) {
 				var total = 0;
@@ -367,11 +363,10 @@
 					}
 				});
 				$.ajax({
-					url: 'some.php',
+					url: 'tax.php',
 					type: 'post',
 					data: $('#tax-form').serialize(),
 					success: function(data) {
-
 						var arr = data.split('-'); 
 						for(var i=0; i<=arr.length-2; i+=2) {
 							$.each($('.id'), function() {
@@ -439,7 +434,7 @@
 					$('.btn-danger').closest('td').remove();
 					$.each($('.user_id'), function() {
 						if($(this).html() == 1) {
-							$(this).closest('tr').append("<td><button class='btn btn-danger m-0'>Delete</button></td>");
+							$(this).closest('tr').append("<td class='td-remove'><button class='btn btn-danger m-0'>Delete</button></td>");
 						}
 					})
 
@@ -497,12 +492,7 @@
 									}
 								});
 							}
-						});		
-						/*$.each($('.user_id'), function() {
-							if($(this).html() == this_user.html()) {
-								sum_penalty+=parseInt($(this).closest('tr').find('.penalty-farerule').html());
-							}
-						});*/
+						});	
 
 						var sum_without_tax = parseInt(this_user.closest('tr').find('.without_tax').html()); 
 						
@@ -566,21 +556,6 @@
 					$('.number-val').val(prev_max - parseInt(number.text()));
 
 				}
-				/*$.each($('.id'), function() {
-					var tr_user = $(this).closest('tr');	
-					if($(this).html() == tr_penalty.find('.user_id').html()) {
-
-						var penalty_price = parseInt(tr_penalty.find('.penalty-farerule').html());
-
-						var prev_sum_pen = parseInt(tr_user.find('.sum_penalty').html());
-						var sum_without_tax = parseInt(tr_user.find('.without_tax').html());
-						
-						var sum_penalty = prev_sum_pen - penalty_price;
-						tr_user.find('.sum_penalty').html(sum_penalty);
-						tr_user.find('.refund').html(sum_without_tax - sum_penalty);
-					}
-				});
-				*/
 				total_tax = $(this).getTotal($('.sum_tax'));
 				total_without_tax = $(this).getTotal($('.without_tax'));
 				total_penalty = $(this).getTotal($('.sum_penalty'));
@@ -615,7 +590,7 @@
 			});
 			
 			$('.fare-val').val(str_fare);
-});		
+	});		
 	</script>
 </body>
 </html>
