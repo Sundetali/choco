@@ -13,8 +13,16 @@
 	$percentage_val = $_POST['percentage-val'];
 	$number_val = $_POST['number-val'];
 
-	$sql = "INSERT INTO save_data (segment, fare_basis, country_code , penalty, penalty_price) VALUES ('$segment', '$fare_val', '$tax_val', '$percentage_val', '$number_val')";
-	$conn->query($sql);
+	$yes = false;
+
+	if($percentage_val != '' || $tax_val != '' || $number_val != ''){
+		$sql = "INSERT INTO save_data (segment, fare_basis, country_code , penalty, penalty_price) VALUES ('$segment', '$fare_val', '$tax_val', '$percentage_val', '$number_val')";
+		$conn->query($sql);	
+	}
+	else {
+		$yes = true;
+	}
+	
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,6 +44,9 @@
 			margin-bottom: 1rem;
 			padding-bottom: .5rem;
 			color: #212c5b;
+		}
+		.yes {
+			display: none;
 		}
 		.btn {
 			margin-bottom: 1rem;
@@ -63,6 +74,9 @@
 		table tr {
 			padding: 0;
 		}
+		#tax-table .ref-non-input {
+			display: none;
+		}
 		.td-remove {
 			display: none;
 			border: none!important;
@@ -83,7 +97,9 @@
 			height: 300px;
 			max-width: 250px;
 			overflow-y: scroll;
-
+		}
+		form .input-result-wrapper {
+			display: none;
 		}
 	</style>
 	
@@ -92,6 +108,7 @@
 	<header>
 		<img src="img/logo.png" alt="choco logo" class="d-block mx-auto">
 	</header>
+	<p class="yes"><?=$yes?></p>
 	<div class="user-info">
 		<div class="container">
 			<div class="row">
@@ -106,6 +123,7 @@
 			</div>
 		</div>
 	</div>
+
 	<div class="tax-list">
 		<div class="container">
 			<div class="row">
@@ -149,6 +167,7 @@
 					
 					<form action="send.php" id="send_form" method="POST">
 						<div class="w-100">
+							<div class="input-result-wrapper">
 							<input type="text" class="" name="segment" value="<?=$data[0]['loc']?>" >
 							<input type="text" class="tax-val" name="tax-val">
 							<input type="text" class="fare-val" name="fare-val">
@@ -165,6 +184,8 @@
 							<input type="hidden" value="" id="" class="table-farerule-data" name=<?='data-table-farerule-' . $key?>>
 							<?php endforeach;?>
 							<input type="hidden" value="<?=$size?>" name="size">
+								
+							</div>
 							<input type="submit" class="btn btn-submit mb-5 d-block ml-auto btn-orange" value="Send">
 						</div>	
 					</form>
@@ -178,6 +199,15 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<!-- <script src="js/main.js"></script> -->
+	<script>
+		$(document).ready(function() {
+			console.log($('.yes'));
+			if($('.yes').text() == 1) {
+				$('.tax-list').css({'display': 'none'});
+				$('.rule-wrapper').css({'display': 'none'});
+			}
+		});
+	</script>
 	
 </body>
 </html>

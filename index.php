@@ -69,6 +69,8 @@
 			font-weight: bold;
 		}
 		.farerule p {
+			border: 1px solid #ccc;
+    		padding: .9rem;
 			height: 300px;
 			max-width: 250px;
 			overflow-y: scroll;
@@ -171,7 +173,7 @@
 	<div class="rule-wrapper">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-9">
+				<div class="col-md-10">
 					<h1 class="w-100">Rule</h1>
 					<?php foreach($rule as $key => $arr):?>
 					<div class="farerule d-flex flex-wrap mb-3">
@@ -210,7 +212,7 @@
 					</div>
 					<?php endforeach;?>
 				</div>
-				<div class="col-md-3" id="div-tax-ist-table">
+				<div class="col-md-2" id="div-tax-ist-table">
 					<h1>Tax list</h1>
 					<table class="table table-bordered" id="tax-list-table">
 						<tr>
@@ -291,25 +293,23 @@
 				})
 				return total;
 			}
+			var total_price = $(this).getTotal($('.ticket-price'));
+			var total_tax = $(this).getTotal($('.sum_tax'));
+			var total_without_tax = $(this).getTotal($('.without_tax'));
+			var total_penalty = $(this).getTotal($('.sum_penalty'));
+			var total_refund_price = $(this).getTotal($('.refund'));
+			
 
-			//sum total all in initial situation
-			var total_price = 0;
-			var total_tax = 0;
-			var total_penalty = 0;
-			$.each($('.ticket-price'), function() {
-				var ticket_price = parseInt($(this).html());
-				total_price+=ticket_price;
-			});
-			var total_without_tax = total_price;
-			var total_refund_price = total_price;
+			$('.total-price-ticket').text(total_price);
+			$('.total-penalty-tax').text(total_tax);
+			$('.total-price-ticket-1').text(total_without_tax);
+			$('.total-penalty-farerule').text(total_penalty);
+			$('.result').text(total_refund_price);
 
-			$('.total-price-ticket').html(total_price);
-			$('.total-penalty-tax').html(total_tax);
-			$('.total-price-ticket-1').html(total_without_tax);
-			$('.total-penalty-farerule').html(total_penalty);
-			$('.result').html(total_refund_price);
-
-
+			if($('.total-penalty-tax').text() != 0 || $('.total-penalty-tax').text() != 0 || $('.status').text() == 'close') {
+				$('.tax-list').css({'display': 'none'});
+				$('.rule-wrapper').css({'display': 'none'});
+			}
 			//tax-list result
 			$('.btn-ref-non').click(function() {
 				var ref_non_list = [];
@@ -529,13 +529,23 @@
 				//change each user's sum penalty
 				//add all tr after delete button's tr and count each sum client's penalty
 
+				//sum each column prices and total of user info's table
 				$.each($('.id'), function() {
-					var td = $(this).closest('tr').find('.sum_penalty');
-					var prev_sum_penalty = parseInt(td.text());
+					var td_sum_penalty = $(this).closest('tr').find('.sum_penalty');
+					var td_sum_without_tax = $(this).closest('tr').find('.without_tax');
+					var td_sum_refund = $(this).closest('tr').find('.refund');
+
 					var penalty_price = parseInt(next_tr.find('.penalty-farerule').text());
 					
-					td.text(prev_sum_penalty - penalty_price);
-					
+					var prev_sum_penalty = parseInt(td_sum_penalty.text());
+					var sum_without_tax = parseInt(td_sum_without_tax.text());
+					var sum_penalty = prev_sum_penalty - penalty_price;
+					var sum_refund = sum_without_tax - sum_penalty;
+				
+
+					td_sum_penalty.text(sum_penalty);
+					td_sum_refund.text(sum_refund);
+
 					arr.push(next_tr);
 					next_tr = next_tr.next();
 					
