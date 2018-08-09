@@ -13,7 +13,12 @@ pd.set_option('display.width', 1000)
 
 with open('bokking.json') as data_file:    
     data = json.load(data_file)
-use_data = data[46]#35 38 46
+use_data = data[10]#35 38 46
+#35 data one client doesn't have tax dont't work status close
+#30 37 close
+#20 open
+
+
 
 
 fare_id = use_data['cid']
@@ -58,7 +63,7 @@ def getUser(data):
 
             dep_dict['user_id'].append(count)
             dep_dict['status'].append(calc(route['DepartureDate']))
-            dep_dict['dep_time'].append(dep_time)
+            dep_dict['dep_time'].append(route['DepartureDate'])
             dep_dict['arr_time'].append(arr_time)
             dep_dict['from_loc'].append(route['From'])
             dep_dict['to_loc'].append(route['To'])
@@ -87,9 +92,9 @@ def getUser(data):
         dep_new_dict['user_id'].append(i+1)
         dep_new_dict['loc'].append(arr[count_save].strip())
         dep_new_dict['fare_basis'].append(' '.join(fare_rule[count_save]))
-        dep_new_dict['status'].append(calc(route['DepartureDate']))
+        dep_new_dict['status'].append(calc(dep_dict["dep_time"][0]))
 
-        isExist = Checker(arr[count_save].strip(),  ' '.join(fare_rule[count_save] ))
+        isExist = Checker(arr[count_save].strip(),  ' '.join(fare_rule[count_save] ),dep_dict)
 
 
         if len(isExist) == 0:
@@ -129,15 +134,15 @@ def getUser(data):
 
 
 ## Checks same info exists or not
-def Checker(dep_dict,fare):
+def Checker(segment, fare, dep_dict):
     engine = getConnection()
     con = engine.connect()
     execute = con.execute('select * from save_data;')
     a = {}
-    for i in execute:
-        if (i['segment'].strip() == dep_dict and (i['fare_basis'].strip()) == fare.strip() ):
-            a = i
-    print(a)
+    if (calc(dep_dict['dep_time'][0]) == 'open' ):
+        for i in execute:
+            if (i['segment'].strip() == segment and (i['fare_basis'].strip()) == fare.strip() ):
+                a = i
     return a
 
 
@@ -173,20 +178,20 @@ def getConnection():
 
 ## To calculate status
 def calc(dep_time):
-    ##realtime date
 
-    # date = (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    date_now_str = (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    dep_str = str(datetime.datetime.strptime(dep_time, '%Y-%m-%dT%H:%M:%S'))
 
-    # dep = int(datetime.datetime.strptime(dep_time, '%Y-%m-%dT%H:%M:%S').strftime("%s"))
-    # date_now = int(datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S').strftime("%s"))
+    date_now = (datetime.datetime.strptime(date_now_str, '%Y-%m-%d %H:%M:%S'))
+    dep_form = (datetime.datetime.strptime(dep_str, '%Y-%m-%d %H:%M:%S'))
 
-    # if (dep - date_now > 0):
-    #     return ('open')
-    # else:
-    #     return ('close')
+    if dep_form > date_now:
+        return "open"
+    else:
+        return "close"
 
 
-    return 'open'
+    # return 'open'
 
 
 def getFare(fare_list):
