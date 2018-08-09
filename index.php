@@ -76,6 +76,10 @@
 			overflow-y: scroll;
 
 		}
+
+		form .input-result-wrapper {
+			display: none;
+		}
 	</style>
 	
 </head>
@@ -243,22 +247,25 @@
 					
 					<form action="send.php" id="send_form" method="POST">
 						<div class="w-100">
-							<input type="text" class="" name="segment" value="<?=$data[0]['loc']?>" >
-							<input type="text" class="tax-val" name="tax-val">
-							<input type="text" class="fare-val" name="fare-val">
-							<input type="text" class="percentage-val" name="percentage-val">
-							<input type="text" class="number-val" name="number-val">
-						
-		
-							<input type="hidden" value="" id="user-table-data" name="user-table-data">
-							<input type="hidden" value="" id="tax-list-table-data" name="tax-list-table-data">
-							<input type="hidden" value="" id="tax-table-data" name="tax-table-data">
-							<?php foreach($rule as $key => $arr):
-								$size += 1;
-							?>
-							<input type="hidden" value="" id="" class="table-farerule-data" name=<?='data-table-farerule-' . $key?>>
-							<?php endforeach;?>
-							<input type="hidden" value="<?=$size?>" name="size">
+							<div class="input-result-wrapper">
+								<input type="text" class="" name="segment" value="<?=$data[0]['loc']?>" >
+								<input type="text" class="tax-val" name="tax-val">
+								<input type="text" class="fare-val" name="fare-val">
+								<input type="text" class="percentage-val" name="percentage-val">
+								<input type="text" class="number-val" name="number-val">
+								<input type="text" class="fare">
+			
+								<input type="hidden" value="" id="user-table-data" name="user-table-data">
+								<input type="hidden" value="" id="tax-list-table-data" name="tax-list-table-data">
+								<input type="hidden" value="" id="tax-table-data" name="tax-table-data">
+								<?php foreach($rule as $key => $arr):
+									$size += 1;
+								?>
+								<input type="hidden" value="" id="" class="table-farerule-data" name=<?='data-table-farerule-' . $key?>>
+								<?php endforeach;?>
+								<input type="hidden" value="<?=$size?>" name="size">
+								
+							</div>
 							<input type="submit" class="btn btn-submit mb-5 d-block ml-auto btn-orange" value="Send">
 						</div>	
 					</form>
@@ -406,6 +413,8 @@
 			
 
 			$('.btn-calculate').click(function() {
+
+
 				var rule_wrapper = $(this).closest('.rule-wrapper');
 				if(!$(this).isEmpty(rule_wrapper.find('input.rule'))) {
 					
@@ -452,8 +461,7 @@
 								else {
 									sum_penalty+=parseInt($(this).closest('tr').find('.penalty-farerule').text());	
 								}
-							}
-													
+							}						
 						});
 
 						dic['fare'] = $(this).closest('.farerule').find('h4').text();
@@ -513,8 +521,9 @@
 				};
 
 				/*$('.percentage-val').val(sum_percentage + '%');*/
-				
-
+				////
+				$(this).closest('.rule-wrapper').find('input').val('');
+				////
 				return false;
 			});
 
@@ -566,6 +575,71 @@
 					$('.number-val').val(prev_max - parseInt(number.text()));
 
 				}
+				/////
+
+				var sum_penalty_arr = [];
+				$.each($('.table-farerule'), function() {
+					var dic = {};
+					var sum_percentage = 0;
+					var sum_penalty = 0;
+					$.each($(this).find('.percentage-1'), function() {
+						if($(this).closest('tr').find('.user_id').text() == 1) {
+							if($(this).text() != ''){
+								sum_percentage+=parseInt($(this).text());
+							}
+							else {
+								sum_penalty+=parseInt($(this).closest('tr').find('.penalty-farerule').text());	
+							}
+						}						
+					});
+
+					dic['fare'] = $(this).closest('.farerule').find('h4').text();
+					dic['sum_percentage'] = sum_percentage;
+					dic['sum_penalty'] = sum_penalty;
+					sum_penalty_arr.push(dic);
+				});
+
+				var max_percentage = 0;
+				var max_penalty = 0;
+				var fare_basis = '';
+				$.each(sum_penalty_arr, function() {
+					if($(this)[0].sum_percentage > max_percentage) {
+						max_percentage = $(this)[0].sum_percentage; 	
+						max_penalty = $(this)[0].sum_penalty;
+						fare_basis = $(this)[0]['fare'];
+					}
+				});
+				$('.percentage-val').val(max_percentage + '%');
+				$('.number-val').val(max_penalty);
+				$('.fare').val(fare_basis);
+
+
+				$.each($('.id'), function() {
+					var this_user = $(this);
+					var sum_penalty = 0;
+					//find max percentage's fare_base
+					$.each($('h4'), function() {
+						if($(this).html() == fare_basis) {
+							var table = $(this).closest('.farerule').find('.user_id');
+							//than run loop by id 
+							$.each(table, function() {
+								if($(this).html() == this_user.html()) {		
+									sum_penalty+=parseInt($(this).closest('tr').find('.penalty-farerule').html());
+								
+								}
+							});
+						}
+					});	
+
+					var sum_without_tax = parseInt(this_user.closest('tr').find('.without_tax').html()); 
+					
+					this_user.closest('tr').find('.sum_penalty').html(sum_penalty);
+					this_user.closest('tr').find('.refund').html(sum_without_tax - sum_penalty);
+				});
+			
+
+
+				/////
 				total_tax = $(this).getTotal($('.sum_tax'));
 				total_without_tax = $(this).getTotal($('.without_tax'));
 				total_penalty = $(this).getTotal($('.sum_penalty'));

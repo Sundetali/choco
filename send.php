@@ -168,22 +168,22 @@
 					<form action="send.php" id="send_form" method="POST">
 						<div class="w-100">
 							<div class="input-result-wrapper">
-							<input type="text" class="" name="segment" value="<?=$data[0]['loc']?>" >
-							<input type="text" class="tax-val" name="tax-val">
-							<input type="text" class="fare-val" name="fare-val">
-							<input type="text" class="percentage-val" name="percentage-val">
-							<input type="text" class="number-val" name="number-val">
-							<input type="text" class="fare">
-		
-							<input type="hidden" value="" id="user-table-data" name="user-table-data">
-							<input type="hidden" value="" id="tax-list-table-data" name="tax-list-table-data">
-							<input type="hidden" value="" id="tax-table-data" name="tax-table-data">
-							<?php foreach($rule as $key => $arr):
-								$size += 1;
-							?>
-							<input type="hidden" value="" id="" class="table-farerule-data" name=<?='data-table-farerule-' . $key?>>
-							<?php endforeach;?>
-							<input type="hidden" value="<?=$size?>" name="size">
+								<input type="text" class="" name="segment" value="<?=$data[0]['loc']?>" >
+								<input type="text" class="tax-val" name="tax-val">
+								<input type="text" class="fare-val" name="fare-val">
+								<input type="text" class="percentage-val" name="percentage-val">
+								<input type="text" class="number-val" name="number-val">
+								<input type="text" class="fare">
+			
+								<input type="hidden" value="" id="user-table-data" name="user-table-data">
+								<input type="hidden" value="" id="tax-list-table-data" name="tax-list-table-data">
+								<input type="hidden" value="" id="tax-table-data" name="tax-table-data">
+								<?php foreach($rule as $key => $arr):
+									$size += 1;
+								?>
+								<input type="hidden" value="" id="" class="table-farerule-data" name=<?='data-table-farerule-' . $key?>>
+								<?php endforeach;?>
+								<input type="hidden" value="<?=$size?>" name="size">
 								
 							</div>
 							<input type="submit" class="btn btn-submit mb-5 d-block ml-auto btn-orange" value="Send">

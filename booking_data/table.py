@@ -13,8 +13,8 @@ pd.set_option('display.width', 1000)
 
 with open('bokking.json') as data_file:    
     data = json.load(data_file)
-use_data = data[10]#35 38 46
-#35 data one client doesn't have tax dont't work status close
+use_data = data[38]#35 38 46
+#35 three type's of farebases in on farerule
 #30 37 close
 #20 open
 
@@ -78,7 +78,7 @@ def getUser(data):
             tax_dict['price'].append(int(tax['Amount']))
             tax_dict['tax_nature'].append(tax['TaxNature'])
             tax_dict['country_code'].append(tax['CountryCode'])
-            tax_dict['Refund'].append('')
+            tax_dict['Refund'].append('refundable')
         count += 1
 
 
@@ -164,6 +164,7 @@ def getTaxAmount(tax_dict,tax_sql):
 
     for i in range (len(tax_dict['country_code'])):
         if (tax_dict['country_code'][i].strip() == tax_sql):
+            tax_dict['Refund'][i] = 'non-refundable'
             tax_price = tax_dict['price'][i]
             amount[tax_dict['user_id'][i]] = amount[tax_dict['user_id'][i]] + tax_price
     return amount
