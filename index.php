@@ -76,204 +76,188 @@
 			overflow-y: scroll;
 
 		}
-
-		form .input-result-wrapper {
-			display: none;
-		}
 	</style>
 	
 </head>
 <body>
-	<header>
-		<img src="img/logo.png" alt="choco logo" class="d-block mx-auto">
-	</header>
-	<div class="user-info">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<h1>User Info</h1>
-					<form>
-						<table class="table" id="user-table">
-							<tr>
-								<th>ID</th>
-								<th>Name Surname</th>
-								<th>tiket-id</th>
-								<th>Status</th>
-								<th>Segment</th>
-								<th>Fare-basis</th>
-								<th>Total price</th>
-								<th>Sum Tax</th>
-								<th>Without tax</th>
-								<th>Sum penalty</th>
-								<th>refund</th>
-								
-							</tr>
-							<?php foreach($data as $value):?>
-							<tr>
-								<td class="id"><?php echo $value['id']?></td>
-								<td class="name-surname"><?php echo $value['name_surname']?></td>
-								<td class="ticket-id"><?=$value['ticket_id']?></td>
-								<td class="status"><?=$value['status']?></td>
-								<td class="segment"><?=$value['loc']?></td>
-								<td class="fare-basis"><?=$value['fare_basis']?></td>
-								<td class="ticket-price"><?=$value['total_price']?></td>
-								<td class="sum_tax pen"><?=$value['sum_tax']?></td>
-								<td class="without_tax dif"><?=$value['without_tax']?></td>
-								<td class="sum_penalty pen"><?=$value['sum_penalty']?></td>
-								<td class="refund dif"><?=$value['refund']?></td>
-							</tr>
-							<?php endforeach; ?>
-							<tr>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td class="total-price-ticket tax-number"></td>
-								<td class="total-penalty-tax pen"></td>
-								<td class="total-price-ticket-1 dif"></td>
-								<td class="total-penalty-farerule pen"></td>
-								<td class="result dif"></td>			
-							</tr>
-						</table>		
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="tax-list">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<h1>Tax</h1>
-					<form id="tax-form">
-						<table class="table table-bordered" id="tax-table">
-							<tr>
-								<th>User_id</th>
-								<th>Name</th>
-								<th>Price</th>
-								<th>Tax_nature</th>
-								<th>Country_code</th>
-								<th>Ref-result</th>
-							</tr>
-							<?php foreach($tax as $arr):?>
-							<tr>
-								<td class="user-id"><?=$arr['user_id']?></td>
-								<td class="name-surname-1"><?=$arr['name_surname']?></td>
-								<td class="price"><?=$arr['price']?></td>
-								<td class="tax-nature"><?=$arr['tax_nature']?></td>
-								<td class="country-code"><?=$arr['country_code']?></td>
-								<td class="ref-result"><?=$arr['Refund']?></td>
-							</tr>
-							<?php endforeach;?>
-						</table>
-						<!-- <input type="submit" class="btn btn-secondary btn-count" value="Count"> -->
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="rule-wrapper">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-10">
-					<h1 class="w-100">Rule</h1>
-					<?php foreach($rule as $key => $arr):?>
-					<div class="farerule d-flex flex-wrap mb-3">
-						<div class="fare-text mr-3">
-							<h4><?php echo $arr['fare']?></h4>	
-							<p class="mr-2"><?=nl2br($arr['rule_text'])?></p>	
-						</div>
-						<div class="rule-wrapper">
-							<div class="row align-items-end mb-2">
-								<div class="col-md-2">
-									<div class="form-group">
-										<label for="percentage">Percentage: </label>
-										<input type="text" class="form-control rule percentage">	
-									</div>		
-								</div>
-								<div class="col-md-3">
-									<div class="form-group">
-										<label for="number">Price: </label>
-										<input type="text" class="form-control rule number">	
-									</div>		
-								</div>
-								<div class="col-md-3">
-									<button class="btn btn-calculate btn-orange">Calculate</button>		
-								</div>							
-							</div>
-							<table class="table table-bordered table-farerule" id=<?='table-farerule-' . $key?>>
+	<form action="senddata.php" method="POST">
+		<header>
+			<img src="img/logo.png" alt="choco logo" class="d-block mx-auto">
+		</header>
+		<div class="user-info">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<h1>User Info</h1>
+							<table class="table" id="user-table">
 								<tr>
 									<th>ID</th>
 									<th>Name Surname</th>
-									<th>Price ticket(without tax)</th>
-									<th>Percentage</th>
-									<th>Penalty</th>
+									<th>tiket-id</th>
+									<th>Status</th>
+									<th>Segment</th>
+									<th>Fare-basis</th>
+									<th>Total price</th>
+									<th>Sum Tax</th>
+									<th>Without tax</th>
+									<th>Sum penalty</th>
+									<th>refund</th>
+									
 								</tr>
-							</table>			
-						</div>
+								<?php foreach($data as $value):?>
+								<tr>
+									<td class="id"><?php echo $value['id']?></td><input type="hidden" name='id[]' value="<?=$value['id']?>"></td>
+									<td class="name-surname"><?php echo $value['name_surname']?></td>
+									<td class="ticket-id"><?=$value['ticket_id']?></td>
+									<td class="status"><?=$value['status']?></td>
+									<td class="segment"><?=$value['loc']?></td>
+									<td class="fare-basis"><?=$value['fare_basis']?></td>
+									<td class="ticket-price"><?=$value['total_price']?></td>
+									<td class="sum_tax pen"><?=$value['sum_tax']?></td><input type="hidden" name='sum_tax[]' value="<?=$value['sum_tax']?>">
+									<td class="without_tax dif"><?=$value['without_tax']?></td><input type="hidden" name='without_tax[]' value="<?=$value['without_tax']?>">
+									<td class="sum_penalty pen"><?=$value['sum_penalty']?></td><input type="hidden" name='sum_penalty[]' value="<?=$value['sum_penalty']?>">
+									<td class="refund dif"><?=$value['refund']?></td><input type="hidden" name='refund[]' value="<?=$value['refund']?>">
+								</tr>
+								<?php endforeach; ?>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td class="total-price-ticket tax-number"></td>
+									<td class="total-penalty-tax pen"></td>
+									<td class="total-price-ticket-1 dif"></td>
+									<td class="total-penalty-farerule pen"></td>
+									<td class="result dif"></td>			
+								</tr>
+							</table>		
+						
 					</div>
-					<?php endforeach;?>
-				</div>
-				<div class="col-md-2" id="div-tax-ist-table">
-					<h1>Tax list</h1>
-					<table class="table table-bordered" id="tax-list-table">
-						<tr>
-							<th>Country code</th>
-							<th>Ref / Non</th>
-						</tr>
-						<?php foreach($country_code as $arr):?>
-						<tr>
-							<td class="ref-non"><?=$arr['country_code']?></td>
-							<td class="ref-non-select">
-								<select class="tax-select" name=<?=$arr['country_code']?> id="">
-									<option value="non-refundable">non-refundable</option>
-									<option value="refundable">refundable</option>
-								</select>
-							</td>
-						</tr>
-						<?php endforeach; ?>
-					</table>
-					<button class="btn btn-ref-non btn-orange">Add</button>
 				</div>
 			</div>
 		</div>
-	</div>
-	<footer>
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					
-					<form action="send.php" id="send_form" method="POST">
-						<div class="w-100">
-							<div class="input-result-wrapper">
-								<input type="text" class="" name="segment" value="<?=$data[0]['loc']?>" >
-								<input type="text" class="tax-val" name="tax-val">
-								<input type="text" class="fare-val" name="fare-val">
-								<input type="text" class="percentage-val" name="percentage-val">
-								<input type="text" class="number-val" name="number-val">
-								<input type="text" class="fare">
-			
-								<input type="hidden" value="" id="user-table-data" name="user-table-data">
-								<input type="hidden" value="" id="tax-list-table-data" name="tax-list-table-data">
-								<input type="hidden" value="" id="tax-table-data" name="tax-table-data">
-								<?php foreach($rule as $key => $arr):
-									$size += 1;
-								?>
-								<input type="hidden" value="" id="" class="table-farerule-data" name=<?='data-table-farerule-' . $key?>>
+		<div class="tax-list">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<h1>Tax</h1>
+							<table class="table table-bordered" id="tax-table">
+								<tr>
+									<th>User_id</th>
+									<th>Name</th>
+									<th>Price</th>
+									<th>Tax_nature</th>
+									<th>Country_code</th>
+									<th>Ref-result</th>
+								</tr>
+								<?php foreach($tax as $arr):?>
+								<tr>
+									<td class="user-id"><?=$arr['user_id']?></td>
+									<td class="name-surname-1"><?=$arr['name_surname']?></td>
+									<td class="price"><?=$arr['price']?></td>
+									<td class="tax-nature"><?=$arr['tax_nature']?></td>
+									<td class="country-code"><?=$arr['country_code']?></td>
+									<td class="ref-result"><?=$arr['Refund']?></td>
+									<input type="hidden" value="<?=$arr['Refund']?>" name="ref_result[]">
+								</tr>
 								<?php endforeach;?>
-								<input type="hidden" value="<?=$size?>" name="size">
-								
-							</div>
-							<input type="submit" class="btn btn-submit mb-5 d-block ml-auto btn-orange" value="Send">
-						</div>	
-					</form>
+							</table>
+							<!-- <input type="submit" class="btn btn-secondary btn-count" value="Count"> -->
+						
+					</div>
 				</div>
 			</div>
 		</div>
-	</footer>
-	
+		<div class="rule-wrapper">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-10">
+						<h1 class="w-100">Rule</h1>
+						<?php foreach($rule as $key => $arr):?>
+						<div class="farerule d-flex flex-wrap mb-3">
+							<div class="fare-text mr-3">
+								<h4><?php echo $arr['fare']?></h4>	
+								<p class="mr-2"><?=nl2br($arr['rule_text'])?></p>	
+							</div>
+							<div class="rule-wrapper">
+								<div class="row align-items-end mb-2">
+									<div class="col-md-2">
+										<div class="form-group">
+											<label for="percentage">Percentage: </label>
+											<input type="text" class="form-control rule percentage">	
+										</div>		
+									</div>
+									<div class="col-md-3">
+										<div class="form-group">
+											<label for="number">Price: </label>
+											<input type="text" class="form-control rule number">	
+										</div>		
+									</div>
+									<div class="col-md-3">
+										<button class="btn btn-calculate btn-orange">Calculate</button>		
+									</div>							
+								</div>
+								<table class="table table-bordered table-farerule" id=<?='table-farerule-' . $key?>>
+									<tr>
+										<th>ID</th>
+										<th>Name Surname</th>
+										<th>Price ticket(without tax)</th>
+										<th>Percentage</th>
+										<th>Penalty</th>
+									</tr>
+								</table>			
+							</div>
+						</div>
+						<?php endforeach;?>
+					</div>
+					<div class="col-md-2" id="div-tax-ist-table">
+						<h1>Tax list</h1>
+						<table class="table table-bordered" id="tax-list-table">
+							<tr>
+								<th>Country code</th>
+								<th>Ref / Non</th>
+							</tr>
+							<?php foreach($country_code as $arr):?>
+							<tr>
+								<td class="ref-non"><?=$arr['country_code']?></td>
+								<td class="ref-non-select">
+									<select class="tax-select" name=<?=$arr['country_code']?> id="">
+										<option value="non-refundable">non-refundable</option>
+										<option value="refundable">refundable</option>
+									</select>
+								</td>
+							</tr>
+							<?php endforeach; ?>
+						</table>
+						<button class="btn btn-ref-non btn-orange">Add</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						
+							<div class="w-100">
+								<div class="input-result-wrapper">
+									<input type="text" class="" name="segment" value="<?=$data[0]['loc']?>" >
+									<input type="text" class="tax-val" name="tax-val">
+									<input type="text" class="fare-val" name="fare-val">
+									<input type="text" class="percentage-val" name="percentage-val">
+									<input type="text" class="number-val" name="number-val">
+									<input type="text" class="fare">
+								</div>
+								<input type="submit" class="btn btn-submit mb-5 d-block ml-auto btn-orange" value="Send">
+							</div>	
+					
+					</div>
+				</div>
+			</div>
+		</footer>
+	</form>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -290,7 +274,6 @@
 						return empty = false;
 					}
 				});
-				console.log(empty);
 				return empty;
 			}
 			$.fn.getTotal = function(sum) {
@@ -299,6 +282,20 @@
 					total+=parseInt($(this).html());
 				})
 				return total;
+			}
+			$.fn.changeColor = function(ref_result) {
+				$.each(ref_result, function() {
+					
+					if($(this).html().includes('non-refundable')) {
+						$(this).closest('tr').find('.price').removeClass('dif');
+						$(this).closest('tr').find('.price').addClass('pen');
+					}
+					else {
+						$(this).closest('tr').find('.price').removeClass('pen');
+						$(this).closest('tr').find('.price').addClass('dif');
+
+					}
+				});
 			}
 			var total_price = $(this).getTotal($('.ticket-price'));
 			var total_tax = $(this).getTotal($('.sum_tax'));
@@ -313,10 +310,7 @@
 			$('.total-penalty-farerule').text(total_penalty);
 			$('.result').text(total_refund_price);
 
-			if($('.total-penalty-tax').text() != 0 || $('.total-penalty-tax').text() != 0 || $('.status').text() == 'close') {
-				$('.tax-list').css({'display': 'none'});
-				$('.rule-wrapper').css({'display': 'none'});
-			}
+			$(this).changeColor($('.ref-result'));
 			//tax-list result
 			$('.btn-ref-non').click(function() {
 				var ref_non_list = [];
@@ -346,65 +340,52 @@
 					
 					for(var i=0; i<ref_non_list.length; i++) {
 						if(ref_non_list[i].name == str) {
-							thiss.closest('tr').find('.ref-result').html(ref_non_list[i].value);
-							thiss.closest('tr').find('.ref-result').append("<input type=text class='ref-non-input' name=ref-non-"+count+" value="+ref_non_list[i].value+">");
-						
+							thiss.closest('tr').find('.ref-result').text(ref_non_list[i].value);
+							thiss.closest('tr').find('.ref-result').next().val(ref_non_list[i].value);
 						}
 					}
 					count++;
 				});
-
+				$(this).changeColor($('.ref-result'));
 				
-				//sum non-refundable tax
-				var non_ref = [];
-				$.each($('.ref-result'), function() {
-					var non_ref_dict = {};
-					if($(this).html().includes('non-refundable')) {
-						$(this).closest('tr').find('.price').removeClass('dif');
-						$(this).closest('tr').find('.price').addClass('pen');
-					}
-					else {
-						$(this).closest('tr').find('.price').removeClass('pen');
-						$(this).closest('tr').find('.price').addClass('dif');
+				
+				$.each($('.id'), function() {
+					var thiss = $(this);
+					var sum_tax = 0;
+					$.each($('.user-id'), function() {	
+						var tr = $(this).closest('tr');
+						if($(this).text() == thiss.text() && tr.find('.ref-result').text().includes('non-refundable')) { // 
+							var price = parseInt($(this).closest('tr').find('.price').text());
+							
+							sum_tax+=price;
+						}
 
-					}
-				});
-				$.ajax({
-					url: 'tax.php',
-					type: 'post',
-					data: $('#tax-form').serialize(),
-					success: function(data) {
-						var arr = data.split('-'); 
-						for(var i=0; i<=arr.length-2; i+=2) {
-							$.each($('.id'), function() {
-								if($(this).html() == arr[i]) {
-									var tr = $(this).closest('tr');
-									var price_ticket = parseInt(tr.find('.ticket-price').html());
-									var sum_tax = parseInt(arr[i+1]);
-									var sum_without_tax = price_ticket - sum_tax;
-									var sum_penalty = parseInt(tr.find('.sum_penalty').html());
-									
-									tr.find('.sum_tax').html(sum_tax);
-									tr.find('.without_tax').html(sum_without_tax);
-									tr.find('.refund').html(sum_without_tax-sum_penalty);
-												
-								}
-							});
-						};
-						//total result after ajax request
-						total_tax = $(this).getTotal($('.sum_tax'));
-						total_without_tax = $(this).getTotal($('.without_tax'));
-						total_penalty = $(this).getTotal($('.sum_penalty'));
-						total_refund_price = $(this).getTotal($('.refund'));
-						
-						$('.total-penalty-tax').html(total_tax);
-						$('.total-price-ticket-1').html(total_without_tax);
-						$('.total-penalty-farerule').html(total_penalty);
-						$('.result').html(total_refund_price);
-					}
-				});
-				//send updated user data with
+					});
+					var tr_id = thiss.closest('tr');
+					var sum_ticket = parseInt(tr_id.find('.ticket-price').text());
+					var sum_penalty = parseInt(tr_id.find('.sum_penalty').text());
 
+					var sum_without_tax = sum_ticket - sum_tax;
+					var refund = sum_without_tax - sum_penalty;
+
+					tr_id.find('.sum_tax').text(sum_tax);
+					tr_id.find('.sum_tax').next().val(sum_tax);
+					tr_id.find('.without_tax').text(sum_without_tax);
+					tr_id.find('.without_tax').next().val(sum_without_tax);
+					tr_id.find('.refund').text(refund);
+					tr_id.find('.refund').next().val(refund);
+				});
+		
+
+				total_tax = $(this).getTotal($('.sum_tax'));
+				total_without_tax = $(this).getTotal($('.without_tax'));
+				total_penalty = $(this).getTotal($('.sum_penalty'));
+				total_refund_price = $(this).getTotal($('.refund'));
+				
+				$('.total-penalty-tax').html(total_tax);
+				$('.total-price-ticket-1').html(total_without_tax);
+				$('.total-penalty-farerule').html(total_penalty);
+				$('.result').html(total_refund_price);	
 				
 				return false; 
 							
@@ -427,7 +408,7 @@
 						var thiss = $(this); 
 						var tr = thiss.closest('tr');
 				
-						var id = tr.find('.id').html();
+						var id = tr.find('.id').html(); 
 						var name_surname = tr.find('.name-surname').html();
 						var sum_without_tax = tr.find('.without_tax').html();
 						var number =  percentage != '' ? parseInt( (parseInt(percentage) / 100) * sum_without_tax) : price_penalty;
@@ -501,11 +482,14 @@
 								});
 							}
 						});	
-
-						var sum_without_tax = parseInt(this_user.closest('tr').find('.without_tax').html()); 
+						var tr_id = this_user.closest('tr');
+						var sum_without_tax = parseInt(tr_id.find('.without_tax').html()); 
 						
-						this_user.closest('tr').find('.sum_penalty').html(sum_penalty);
-						this_user.closest('tr').find('.refund').html(sum_without_tax - sum_penalty);
+						tr_id.find('.sum_penalty').text(sum_penalty);
+						tr_id.find('.sum_penalty').next().val(sum_penalty);
+
+						tr_id.find('.refund').text(sum_without_tax - sum_penalty);
+						tr_id.find('.refund').next().val(sum_without_tax - sum_penalty);
 					});
 				
 					total_tax = $(this).getTotal($('.sum_tax'));
@@ -553,7 +537,10 @@
 				
 
 					td_sum_penalty.text(sum_penalty);
+					td_sum_penalty.next().val(sum_penalty);
+
 					td_sum_refund.text(sum_refund);
+					td_sum_refund.next().val(sum_refund);
 
 					arr.push(next_tr);
 					next_tr = next_tr.next();

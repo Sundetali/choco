@@ -75,7 +75,7 @@
       $tax[$i]['price'] = $row['price'];
       $tax[$i]['tax_nature'] = $row['tax_nature'];
       $tax[$i]['country_code'] = $row['country_code'];
-      $tax[$i]['Refund'] = $row[''];
+      $tax[$i]['Refund'] = $row['Refund'];
       $i++;
     }
   }
@@ -93,5 +93,23 @@
       $i++;
     }
   }
+
+    //get penalty percentage and price
+    $select_penalty = "SELECT * FROM penalty_data";
+    $result_select_penalty = $conn->query($select_penalty);
+    $penalty = [];
+      if($result_select_penalty->num_rows > 0) {
+        $i = 0;
+        while($row = $result_select_penalty->fetch_assoc()) {
+          $penalty[$i]['id'] = $row['id'];
+          $penalty[$i]['segment'] = $row['segment'];
+          $penalty[$i]['fare_basis'] = $row['fare_basis'];
+          $penalty[$i]['country_code'] = $row['country_code'];
+          $penalty[$i]['percentage'] = $row['penalty'];
+          $penalty[$i]['price_penalty'] = $row['penalty_price'];
+          $i++;
+        }
+    }
+
 
 ?>

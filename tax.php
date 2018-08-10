@@ -24,6 +24,4 @@ if($result_tax_price->num_rows > 0) {
       echo($row['sum_tax'] . "-");
     }
   }
-
-
 ?>
