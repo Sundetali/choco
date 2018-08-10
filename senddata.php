@@ -1,5 +1,6 @@
 <?php
 	require 'connect.php';
+	$send_to_superviser = FALSE;
 
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     	//insert data to user_data
@@ -32,16 +33,20 @@
 		$percentage_val = $_POST['percentage-val'];
 		$number_val = $_POST['number-val'];
 
-		if($conn->query('SELECT COUNT(*) FROM `penalty_data') == 0){
+		if($conn->query("SELECT * FROM penalty_data")->num_rows == 0){
 			$send_1 = "INSERT INTO penalty_data (segment, fare_basis, country_code , penalty, penalty_price) VALUES ('$segment', '$fare_val', '$tax_val', '$percentage_val', '$number_val')";
+			
 		}
 		else {
+			
 			$send_1 = "UPDATE penalty_data  SET segment = '$segment', fare_basis = '$fare_val', country_code = '$tax_val' , penalty = '$percentage_val', penalty_price = '$number_val' WHERE id = '1'";	
 		}
 		$conn->query($send_1);	
-	
 		
-		header('Location: superviser.php');
-		exit;
+		/*$send_to_superviser = TRUE;
+		
+		echo (isset($send_to_superviser) && $send_to_superviser === TRUE);
+		header( "refresh:$send_to_superviser; url=index.php");*/
+		header("Location:index.php");	
 	}
 ?>
