@@ -13,7 +13,7 @@ pd.set_option('display.width', 1000)
 
 with open('bokking.json') as data_file:    
     data = json.load(data_file)
-use_data = data[18]#35 38 46
+use_data = data[10]#35 38 46
 #35 three type's of farebases in on farerule
 #30 37 close
 #20 open
@@ -26,7 +26,6 @@ ticket_info = use_data['js_ticket']
 load = json.loads(ticket_info)
 user_info = load['passes']
 
-print(fare_id)
 
 user_dict = {'id': [],'name': [],'surname': [],'ticket_id': [],'total_price': [],'sum_tax':[],'without_tax': [],'sum_penalty': [],'refund':[]}
 tax_dict = {'user_id': [], 'price': [],'tax_nature': [],'country_code': [],'Refund':[]}
@@ -85,7 +84,6 @@ def getUser(data):
     fare_rule = getFare(fare_list)
 
 
-    print(arr)
 
     count_save = 0
     for i in range(0, (count-1)):
@@ -244,9 +242,6 @@ def saveToSQL(user, tax, dep, rule):
     dep_df = pd.DataFrame(data = dep)
     tax_df = pd.DataFrame(data = tax)
 
-    print(user_df)
-    print(dep_df)
-    print(tax_df)
 
     # print(dep)
 
@@ -262,7 +257,6 @@ def saveToSQL(user, tax, dep, rule):
 
 ## Save automatic result
 def saveLastData(last):
-    print(last)
     last_df = pd.DataFrame(data = last)
     
 

@@ -140,7 +140,7 @@
 				<div class="col-md-12">
 					<form action="checkdata.php" method="POST" class="d-flex justify-content-end">
 						<input type="hidden" value="<?=$_SESSION['username']?>" name="agent_name">
-						<input type="submit" class="btn btn-danger btn-cancel mr-3" value="Cancel" name = "cancel">
+						<input type="submit" class="btn btn-cancel mr-3" value="Cancel" name = "cancel">
 						<input type="submit" class="btn btn-blue"  value="Approve" name= "approve">
 					</form>
 				</div>

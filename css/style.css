@@ -99,3 +99,6 @@ label {
 	background: #fe9922!important;
 	color: #fff!important;
 }
+.input-result-wrapper {
+	display: none;
+}
