@@ -41,102 +41,7 @@
 	<meta charset="UTF-8">
 	<title>AviaAgent</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-	<!-- <link rel="stylesheet" href="style.css"> -->
-	<style>
-		body, html {
-			padding: 0;
-			margin: 0;
-			font-size: 12px;
-			padding-top: .5rem;
-			background: url(img/background.jpg) repeat-y center 0;
-			color: #212c5b;
-		}
-		h1 {
-			margin-bottom: 1rem;
-			padding-bottom: .5rem;
-			color: #212c5b;
-		}
-		.btn {
-			margin-bottom: 1rem;
-		}
-		.btn-orange {
-			background: #fe9922;
-			color: #fff;
-		}
-
-		.tax-number {
-			font-weight: bold;
-		}
-		table .difference {
-			font-weight: bold;
-		}
-		table .penalty-tax {
-			font-weight: bold;
-		}
-		table th,
-		table td {
-			padding:0.3rem 1rem!important;
-			color: #353535;
-			border-color: #9ea3b7!important;
-		}
-		table tr {
-			padding: 0;
-		}
-
-		.td-remove {
-			border: none!important;
-		}
-		.table-farerule td {
-			padding: 0!important;
-		}
-		#tax-table .ref-non-input {
-			display: none;
-		}
-		.dif {
-			color: green;
-		}
-		.pen {
-			color: red;
-		}
-		.dif, .pen {
-			font-weight: bold;
-		}
-		.farerule p {
-			border: 1px solid #ccc;
-    		padding: .9rem;
-			height: 300px;
-			max-width: 250px;
-			overflow-y: scroll;
-		}
-		.btn-blue {
-			background: #5590c6;
-			color: #fff;
-		}
-		.logo {
-			height: 40px;
-		}
-		.result-penalty span {
-			font-size: 1.2rem;
-		}
-		.sign-wrapper {
-			font-size: 1.2rem;
-		}
-		.sign-wrapper .agent-name {
-			color:#5590c6;
-			font-weight: bold;
-		}
-		.nav-tabs {
-			border: 0!important;
-			margin-bottom: .5rem;
-		}
-		.nav-item .nav-link{
-			color: #5590c6!important;
-		}
-		.nav-item .nav-link.active{
-			background: #fe9922!important;
-			color: #fff!important;
-		}
-	</style>
+	<link rel="stylesheet" href="css/style.css">
 	
 </head>
 <body>
@@ -200,30 +105,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-	<!-- <script src="js/main.js"></script> -->
+	<script src="js/main.js"></script>
 	
-	<script>
-		$(document).ready(function() {
-			
-			$.fn.changeColor = function(ref_result) {
-				$.each(ref_result, function() {
-					
-					if($(this).html().includes('non-refundable')) {
-						$(this).closest('tr').find('.price').removeClass('dif');
-						$(this).closest('tr').find('.price').addClass('pen');
-					}
-					else {
-						$(this).closest('tr').find('.price').removeClass('pen');
-						$(this).closest('tr').find('.price').addClass('dif');
-
-					}
-				});
-			}
-			$(this).changeColor($('.ref-result'));
-			$('.cancel').click(function() {
-				
-			})
-		});		
-	</script>
 </body>
 </html>
