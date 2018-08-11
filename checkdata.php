@@ -24,18 +24,44 @@
 			$send_save = "INSERT INTO save_data (segment, fare_basis, country_code , penalty, penalty_price) 
 						VALUES ('".$penalty[0]['segment']."',  '".$penalty[0]['fare_basis']."', '".$penalty[0]['country_code']."', '".$penalty[0]['penalty']."', '".$penalty[0]['penalty_price']."')";
 			
-			$conn->query($send_save);	
-			
+			$conn->query($send_save);
+						
+			$drop_user = "truncate user_data";
+			$conn->query($drop_user);
+
+
+			$drop_last = "truncate last_data";
+			$conn->query($drop_last);
+
+			$drop_tax = "truncate tax_data";
+			$conn->query($drop_tax);
+
+			$drop_rule = "truncate rule_data";
+			$conn->query($drop_rule);
+
+			header('Location:superviser_1.php');
+    		exit;
     	}
- 		$drop_tax = "UPDATE tax_data SET Refund = 'refund' WHERE Refund is not null";
-		$conn->query($drop_tax);
+    	else if(isset($_POST['cancel'])) {
+
+	 		$drop_tax = "UPDATE tax_data SET Refund = 'refund' WHERE Refund is not null";
+			$conn->query($drop_tax);
+
+			$drop_user = "UPDATE user_data SET sum_tax = 0, sum_penalty = 0 WHERE Refund is not null";
+			$conn->query($drop_user);
+
+			header('Location:superviser_1.php');
+    		exit;
+    	}
+    	else if(isset($_POST['edit'])) {
+    		$yes = TRUE;
+			header('Location:index.php');
+
+    	}
 
 		$drop_pen = "truncate penalty_data";
 		$conn->query($drop_pen);
 
-		$drop_user = "UPDATE user_data SET sum_tax = 0, sum_penalty = 0 WHERE Refund is not null";
-		$conn->query($drop_user);
-		
 		foreach ($data as $key => $value) {
 			$id = $value['id'];
 			$total_price = $value['total_price'];
@@ -45,8 +71,7 @@
 
 			$conn->query($drop_user);
 		}
-    	header('Location:superviser_1.php');
-    	exit;
+    	
 	}
 
 ?>

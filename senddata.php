@@ -47,6 +47,6 @@
 		
 		echo (isset($send_to_superviser) && $send_to_superviser === TRUE);
 		header( "refresh:$send_to_superviser; url=index.php");*/
-		header("Location:index.php");	
+		header("Location:superviser.php");	
 	}
 ?>

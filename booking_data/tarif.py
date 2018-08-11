@@ -5,7 +5,7 @@ import mysql.connector
 with open('tarif.json','r') as file:
 	tarif = json.load(file)
 
-tarif_xml = json.loads(tarif[11]['tarif_xml'])
+tarif_xml = json.loads(tarif[15]['tarif_xml'])
 
 #print json file
 for rules in tarif_xml['rules']:

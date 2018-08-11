@@ -1,7 +1,7 @@
 <?php
 	require 'connect.php';
 
-	$get_client_ticket = "SELECT * FROM agent JOIN agent_client on agent_name = username";
+	$get_client_ticket = "SELECT * FROM agent JOIN agent_client on agent_client.agent_name = agent.username JOIN tickets_data ON agent_client.ticket_id = tickets_data.ticket_id";
 	$result_select_agent = $conn->query($get_client_ticket);
 	
 	$agent = [];
@@ -12,6 +12,10 @@
 	      $agent[$i]['agent_id'] = $row['agent_id'];
 	      $agent[$i]['username'] = $row['username'];
 	      $agent[$i]['client_name'] = $row['client_name'];
+	      $agent[$i]['total_price'] = $row['total_price'];
+	      $agent[$i]['sum_tax'] = $row['sum_tax'];
+	      $agent[$i]['sum_penalty'] = $row['sum_penalty'];
+	      $agent[$i]['refund'] = $row['refund'];
 	      $agent[$i]['ticket_id'] = $row['ticket_id'];
 	      $i++;
 	    }
@@ -129,8 +133,8 @@
 			color: #5590c6!important;
 		}
 		.nav-item .nav-link.active{
-			background: #5590c6!important;
-    		color: #fff!important;
+			background: #fe9922!important;
+			color: #fff!important;
 		}
 	</style>
 	
@@ -162,12 +166,21 @@
 						  		<tr>
 						  			<th>Client's name</th>
 						  			<th>Id_ticket</th>
+						  			<th>Ticket price</th>
+						  			<th>Sum tax</th>
+						  			<th>Sum penalty</th>
+						  			<th>Refund price</th>
 						  		</tr>
 						  	<?php foreach($agent as $key => $value):?>
 						  				<?php if($value['agent_id'] == $value_1['agent_id']):?>
 						  				<tr>
 						  					<td><?=$value['client_name']?></td>
 						  					<td><?=$value['ticket_id']?></td>
+						  					<td><?=$value['total_price']?></td>
+						  					<td><?=$value['sum_tax']?></td>
+						  					<td><?=$value['sum_penalty']?></td>
+						  					<td><?=$value['refund']?></td>
+						  			
 						  				</tr>
 						  				<?php endif;?>
 						  	<?php endforeach;?>
@@ -175,6 +188,9 @@
 						  </div>
 						<?php endforeach;?>
 					</div>
+				</div>
+				<div class="col-md-10">
+					<a href="superviser.php"><input type="button" value="Back" class="btn btn-blue"></a>
 				</div>		
 			</div>
 		</div>

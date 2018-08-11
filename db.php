@@ -11,10 +11,11 @@
   
   $result_select = $conn->query($query_select);
   $result_select_last = $conn->query($query_select_last);
-
+  $yes = true;
   $data = [];
 
   if($result_select_last->num_rows > 0) {
+    $yes = false;
     $i=0;
     while($row = $result_select_last->fetch_assoc()) {
       $data[$i]['id'] = $row['user_id']; 
