@@ -5,6 +5,19 @@
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     	
 
+		$drop_pen = "truncate penalty_data";
+		$conn->query($drop_pen);
+
+		foreach ($data as $key => $value) {
+			$id = $value['id'];
+			$total_price = $value['total_price'];
+			
+			$drop_user = "UPDATE user_data SET without_tax = $total_price, refund = $total_price
+			WHERE id = '$id'";
+
+			$conn->query($drop_user);
+		}
+    
 
     	if(isset($_POST['approve'])) {
 
@@ -57,21 +70,7 @@
     		$yes = TRUE;
 			header('Location:index.php');
 
-    	}
-
-		$drop_pen = "truncate penalty_data";
-		$conn->query($drop_pen);
-
-		foreach ($data as $key => $value) {
-			$id = $value['id'];
-			$total_price = $value['total_price'];
-			
-			$drop_user = "UPDATE user_data SET without_tax = $total_price, refund = $total_price
-			WHERE id = '$id'";
-
-			$conn->query($drop_user);
-		}
-    	
+    	}	
 	}
 
 ?>
