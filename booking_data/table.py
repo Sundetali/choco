@@ -11,9 +11,9 @@ pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
 
-with open('bokking.json') as data_file:    
+with open('userData.json') as data_file:
     data = json.load(data_file)
-use_data = data[39]  # 39 26 
+use_data = data[3]  # 39 26
 #35 three type's of farebases in on farerule
 #30 37 close
 #20 open

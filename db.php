@@ -2,18 +2,22 @@
   
   require 'connect.php';
 
-  //select user_data with tax
+  // select data for the first table in index.php
+  
+  //select data from user_data
   $query_select = "Select * From user_data Join dep_data 
                     On user_data.id = dep_data.user_id";
-  
+  $result_select = $conn->query($query_select);
+
+  //select data from last_data 
   $query_select_last = "Select * From last_data Join dep_data 
                     On last_data.id = dep_data.user_id";
-  
-  $result_select = $conn->query($query_select);
   $result_select_last = $conn->query($query_select_last);
+  
   $yes = true;
   $data = [];
 
+  //check where from we get data
   if($result_select_last->num_rows > 0) {
     $yes = false;
     $i=0;
@@ -51,6 +55,7 @@
       $i++;
     }
   }
+  
 
   //select tax nature  
   $get_country_code = "Select DISTINCT country_code From tax_data";
@@ -63,6 +68,8 @@
       $i++;
     }
   }
+
+  //second table in index.php
 
   // user and tax data
   $get_tax = "Select * From tax_data Join user_data On user_data.id = tax_data.user_id";
@@ -82,7 +89,7 @@
   }
 
 
-  // user and tax data
+  //select rule_text
   $get_rule = "Select * From rule_data";
   $result_select_3 = $conn->query($get_rule);
   $rule = [];

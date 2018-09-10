@@ -10,7 +10,7 @@
 	<meta charset="UTF-8">
 	<title>AviaAgent</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-	<link rel="stylesheet" href="css/.css">
+	<link rel="stylesheet" href="css/style.css">
 
 	
 </head>
@@ -304,7 +304,8 @@
 						
 					<?php endforeach;?>
 					</div>
-					<div class="result-penalty-wrapper pt-4">
+					<div class="result-penalty-wrapper pt-4" style="display: block">
+
 						<?php foreach ($penalty as $key => $value):?>
 						<div class="result-penalty">
 							<span>Penalty percentage:</span>
@@ -322,7 +323,7 @@
 						<input type="hidden" value="<?=$_SESSION['username']?>" name="agent_name">
 						<input type="submit" class="btn btn-orange btn-cancel mr-3" value="Edit" name = "edit">
 						<input type="submit" class="btn btn-blue"  value="Send" name= "approve">
-					</form>
+					</form>	
 				</div>
 			</div>
 		</div>
